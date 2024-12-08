@@ -4,6 +4,7 @@ import clientPromise from '@/lib/mongodb';
 export async function POST(request) {
     try {
         const { email, password } = await request.json();
+        console.warn(email, password);
         const client = await clientPromise;
         const db = client.db('yazlab1-3');
         const customer = await db.collection('customers').findOne({ email, password });
