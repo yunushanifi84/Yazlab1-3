@@ -16,7 +16,7 @@
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
     /* Kart hafifçe yükselir */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* Daha hafif gölge */
@@ -50,5 +50,5 @@
 .product-details .price {
     font-size: 0.95rem;
     font-weight: bold;
-    color: #27ae60;
+    color: #27ae60 !important;
 }

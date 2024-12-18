@@ -16,7 +16,7 @@ export default function ProductCard({ products }) {
                 <div className="product-details">
                     <h3>{product.name}</h3>
                     <p>{product.description}</p>
-                    <p>{product.price}</p>
+                    <p className='price'>{product.price}</p>
                 </div>
             </div>
         ))
