@@ -1,23 +1,17 @@
-import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
 const uri = process.env.MongoDBUrl;
 
-let client;
-let clientPromise;
-
-if (!process.env.MongoDBUrl) {
+if (!uri) {
     throw new Error('Please add your MongoDB URL to .env.local');
 }
 
-if (process.env.NODE_ENV === 'development') {
-    if (!global._mongoClientPromise) {
-        client = new MongoClient(uri);
-        global._mongoClientPromise = client.connect();
-    }
-    clientPromise = global._mongoClientPromise;
-} else {
-    client = new MongoClient(uri);
-    clientPromise = client.connect();
-}
+mongoose.connect(uri, {
+    dbName:"Yazlab1-3"
+});
 
-export default clientPromise;
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+export default db;
