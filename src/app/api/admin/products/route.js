@@ -1,6 +1,7 @@
 import Product from "@/models/ProductModel";
 import { NextResponse } from "next/server";
 import db from "@/lib/mongodb";
+import Log from "@/models/LogModel";
 
 export async function POST(request) {
     try {
@@ -38,12 +39,20 @@ export async function POST(request) {
         // Veritabanına kaydet
         await product.save();
 
+        await Log.create({
+            LogDetails: `Yeni ürün eklendi: ${productName}`,
+            LogType: "Info",
+        });
         return NextResponse.json(
             { message: "Ürün başarıyla eklendi.", id: product._id },
             { status: 201 }
         );
     } catch (error) {
         console.error("Ürün ekleme sırasında hata:", error);
+        await Log.create({
+            LogDetails: `Ürün ekleme başarısız oldu: ${error.message}`,
+            LogType: "Error",
+        });
         return NextResponse.json(
             { error: "Ürün ekleme başarısız oldu." },
             { status: 500 }

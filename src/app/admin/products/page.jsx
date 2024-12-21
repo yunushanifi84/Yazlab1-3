@@ -62,6 +62,7 @@ const Products = () => {
                 price: "",
             });
             setImageStream(null);
+            window.location.reload();
         } catch (error) {
             console.error("Ürün eklerken hata oluştu:", error);
         }

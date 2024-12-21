@@ -29,10 +29,9 @@ export default function ProductCard({ products }) {
                     <Image src={bufferToBase64(product.imageStream)} alt="product image" width={250} height={200} style={{ objectFit: "cover" }} />
                 </div>
                 <div className="product-details">
-                    <h3>{product.name}</h3>
+                    <h3>{product.productName}</h3>
                     <p>{product.description}</p>
                     <p className='price'>{product.price}</p>
-
                 </div>
 
                 <button className="add-button" onClick={() => handleAddToCart(product)}>
