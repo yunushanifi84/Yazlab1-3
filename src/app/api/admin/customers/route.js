@@ -1,6 +1,7 @@
-import Customer from '@/models/CustomerModel';
-import { generateToken, verifyToken } from '@/lib/jwt';
+import Customer from "@/models/CustomerModel";
 
+
+// Tüm müşterileri getir
 export async function GET(request) {
 
 
@@ -14,25 +15,25 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-    const token = request.headers.get('Authorization')?.split(' ')[1];
-    const decoded = verifyToken(token);
-
-    if (!decoded) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
 
     try {
         const body = await request.json();
-
+        const { CustomerName, Budget, CustomerType, Email, Password } = body;
         // Yeni müşteri oluşturma
-        const newCustomer = new Customer(body);
-        await newCustomer.save();
+        const newCustomer = await Customer.create({
+            CustomerName: CustomerName,
+            Budget: Budget,
+            CustomerType: CustomerType,
+            Email: Email,
+            Password: Password
+        });
+        console.log('New customer created:', newCustomer);
 
         return new Response(JSON.stringify({ message: 'Customer added', id: newCustomer._id }), {
             status: 201,
         });
     } catch (error) {
-        console.error("Error during customer creation:", error);
+        console.error('Error creating new customer:', error);
         return new Response(JSON.stringify({ error: 'Failed to add customer' }), { status: 500 });
     }
 }
