@@ -7,6 +7,9 @@
         "typescript": "typescript",
         "typescriptreact": "typescript"
     },
+    "tailwindCSS.experimental.configFile": "./tailwind.config.js",
+    "tailwindCSS.emmetCompletions": true,
+    "emmet.triggerExpansionOnTab": true,
     "editor.quickSuggestions": {
         "strings": true
     }
