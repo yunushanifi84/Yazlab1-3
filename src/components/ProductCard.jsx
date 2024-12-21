@@ -1,8 +1,8 @@
 import React from 'react'
 import Image from "next/image";
 import "@/styles/ProductCard.css";
-import { useState } from 'react';
 export default function ProductCard({ products }) {
+
     const handleAddToCart = (product) => {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         console.log(cart);
@@ -35,29 +35,10 @@ export default function ProductCard({ products }) {
                     <p className='price'>{product.price}</p>
 
                 </div>
-                {JSON.parse(localStorage.getItem('cart')).quantity &&
-                    <label style={{ marginRight: "auto", color: "black", display: "flex", alignItems: "center" }}>
-                        <Image
-                            src={minusIcon}
-                            width={15}
-                            height={15}
-                            alt={product.title}
-                            onClick={() => handleQuantityChange(product.id, product.quantity - 1)}
-                        />
-                        <span className='product-quantity'>{product.quantity}</span>
-                        <Image
-                            src={plusIcon}
-                            width={15}
-                            height={15}
-                            alt={product.title}
-                            onClick={() => handleQuantityChange(product.id, product.quantity + 1)}
-                        />
-                    </label>
-                }
-                {!JSON.parse(localStorage.getItem('cart')).quantity &&
-                    <button className="add-button" onClick={() => handleAddToCart(product)}>
-                        Sepete Ekle
-                    </button>}
+
+                <button className="add-button" onClick={() => handleAddToCart(product)}>
+                    Sepete Ekle
+                </button>
             </div>
         ))
 
