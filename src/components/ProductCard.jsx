@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from "next/image";
 import "@/styles/ProductCard.css";
+import bufferToBase64 from '@/utils/imageConverter';
 export default function ProductCard({ products }) {
 
     const handleAddToCart = (product) => {
@@ -23,9 +24,9 @@ export default function ProductCard({ products }) {
 
 
         products.map((product) => (
-            <div className="product-card" key={product.id}>
+            <div className="product-card" key={product._id}>
                 <div className="product-image">
-                    <Image src={product.image} alt="product image" width={250} height={200} style={{ objectFit: "cover" }} />
+                    <Image src={bufferToBase64(product.imageStream)} alt="product image" width={250} height={200} style={{ objectFit: "cover" }} />
                 </div>
                 <div className="product-details">
                     <h3>{product.name}</h3>

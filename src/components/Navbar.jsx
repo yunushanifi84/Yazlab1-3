@@ -88,6 +88,11 @@ const Navbar = () => {
                             {isAdmin && (
                                 <div>
                                     <Link
+                                        href="/admin/products"
+                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200">
+                                        Ürünler
+                                    </Link>
+                                    <Link
                                         href="/admin/customers"
                                         className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200">
                                         Müşteriler

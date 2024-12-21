@@ -3,56 +3,79 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Products = () => {
-    const [customers, setCustomers] = useState([]);
+    const [products, setProducts] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newCustomer, setNewCustomer] = useState({
-        CustomerName: "",
-        Budget: "",
-        CustomerType: "",
-        Email: "",
-        Password: ""
+    const [newProduct, setNewProduct] = useState({
+        productName: "",
+        description: "",
+        stock: "",
+        price: "",
     });
+    const [imageStream, setImageStream] = useState(null);
 
     useEffect(() => {
-        const fetchCustomers = async () => {
+        const fetchProducts = async () => {
             try {
-                const response = await axios.get("/api/admin/customers");
-                setCustomers(response.data);
+                const response = await axios.get("/api/products");
+                setProducts(response.data);
             } catch (error) {
-                console.error("Error fetching customers:", error);
+                console.error("Ürünleri çekerken hata oluştu:", error);
             }
         };
 
-        fetchCustomers();
+        fetchProducts();
     }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewCustomer({ ...newCustomer, [name]: value });
+        setNewProduct({ ...newProduct, [name]: value });
     };
 
-    const handleAddCustomer = async (e) => {
+    const handleFileChange = (e) => {
+        setImageStream(e.target.files[0]);
+    };
+
+    const handleAddProduct = async (e) => {
         e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("productName", newProduct.productName);
+        formData.append("description", newProduct.description);
+        formData.append("stock", newProduct.stock);
+        formData.append("price", newProduct.price);
+        if (imageStream) {
+            formData.append("image", imageStream);
+        }
+
         try {
-            const response = await axios.post("/api/admin/customers", newCustomer);
-            setCustomers([...customers, response.data]);
+            const response = await axios.post("/api/admin/products", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            setProducts([...products, response.data]);
             setIsModalOpen(false);
-            setNewCustomer({ name: "", email: "", phone: "" });
-            window.location.reload();
+            setNewProduct({
+                productName: "",
+                description: "",
+                stock: "",
+                price: "",
+            });
+            setImageStream(null);
         } catch (error) {
-            console.error("Error adding customer:", error);
+            console.error("Ürün eklerken hata oluştu:", error);
         }
     };
 
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">Müşteriler</h1>
+                <h1 className="text-2xl font-bold">Ürünler</h1>
                 <button
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                     onClick={() => setIsModalOpen(true)}
                 >
-                    Müşteri Ekle
+                    Ürün Ekle
                 </button>
             </div>
 
@@ -60,7 +83,7 @@ const Products = () => {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white rounded-lg shadow-lg w-1/3">
                         <div className="px-6 py-4 flex justify-between items-center border-b">
-                            <h2 className="text-lg font-bold">Yeni Müşteri Ekle</h2>
+                            <h2 className="text-lg font-bold">Yeni Ürün Ekle</h2>
                             <button
                                 className="text-gray-500 hover:text-red-500"
                                 onClick={() => setIsModalOpen(false)}
@@ -68,63 +91,58 @@ const Products = () => {
                                 ✕
                             </button>
                         </div>
-                        <form onSubmit={handleAddCustomer} className="p-6">
+                        <form onSubmit={handleAddProduct} className="p-6">
                             <div className="mb-4">
                                 <input
                                     type="text"
-                                    name="CustomerName"
-                                    value={newCustomer.CustomerName}
+                                    name="productName"
+                                    value={newProduct.productName}
                                     onChange={handleInputChange}
                                     className="w-full px-3 py-2 border rounded"
-                                    placeholder="Müşteri adı girin"
+                                    placeholder="Ürün Adı Girin"
                                     required
                                 />
                             </div>
                             <div className="mb-4">
-                                <input
-                                    type="email"
-                                    name="Email"
-                                    value={newCustomer.Email}
+                                <textarea
+                                    name="description"
+                                    value={newProduct.description}
                                     onChange={handleInputChange}
                                     className="w-full px-3 py-2 border rounded"
-                                    placeholder="Email adresi girin"
+                                    placeholder="Açıklama Girin"
                                     required
-                                />
+                                ></textarea>
                             </div>
                             <div className="mb-4">
                                 <input
-                                    type="text"
-                                    name="Password"
-                                    value={newCustomer.Password}
+                                    type="number"
+                                    name="stock"
+                                    value={newProduct.stock}
                                     onChange={handleInputChange}
                                     className="w-full px-3 py-2 border rounded"
-                                    placeholder="Şifre girin"
+                                    placeholder="Stok Miktarı Girin"
                                     required
                                 />
                             </div>
                             <div className="mb-4">
                                 <input
                                     type="number"
-                                    name="Budget"
-                                    value={newCustomer.Budget}
+                                    name="price"
+                                    value={newProduct.price}
                                     onChange={handleInputChange}
                                     className="w-full px-3 py-2 border rounded"
-                                    placeholder="Bütçe girin"
+                                    placeholder="Fiyat Girin"
                                     required
                                 />
                             </div>
                             <div className="mb-4">
-                                <select
-                                    name="CustomerType"
-                                    value={newCustomer.CustomerType}
-                                    onChange={handleInputChange}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
                                     className="w-full px-3 py-2 border rounded"
                                     required
-                                >
-                                    <option value="">Müşteri Tipi Seçin</option>
-                                    <option value="Premium">Premium</option>
-                                    <option value="Standard">Standard</option>
-                                </select>
+                                />
                             </div>
                             <div className="flex justify-end">
                                 <button
@@ -151,30 +169,32 @@ const Products = () => {
                     <thead>
                         <tr className="bg-gray-200 dark:bg-gray-700">
                             <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">ID</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Ad</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Email</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Şifre</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Ürün Adı</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Açıklama</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Stok</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Fiyat</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {customers.map((customer, index) => (
+                        {products.map((product, index) => (
                             <tr
-                                key={customer._id}
-                                className={`${index % 2 === 0
-                                    ? "bg-gray-100 dark:bg-gray-800"
-                                    : "bg-white dark:bg-gray-900"
-                                    } hover:bg-gray-200 dark:hover:bg-gray-700`}
+                                key={product._id}
+                                className={`${
+                                    index % 2 === 0
+                                        ? "bg-gray-100 dark:bg-gray-800"
+                                        : "bg-white dark:bg-gray-900"
+                                } hover:bg-gray-200 dark:hover:bg-gray-700`}
                             >
-                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer._id}</td>
-                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer.CustomerName}</td>
-                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer.Email}</td>
-                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer.Password}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product._id}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product.productName}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product.description}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product.stock}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product.price} TL</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-
         </div>
     );
 };
