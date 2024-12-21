@@ -1,5 +1,5 @@
 import db from '@/lib/mongodb';
-import Product from '@/models/Product';
+import Product from '@/models/ProductModel';
 
 export async function GET(request) {
     try {
@@ -11,10 +11,13 @@ export async function GET(request) {
     }
 }
 
+
+//for add product
 export async function POST(request) {
     try {
         const body = await request.json();
-        const product = new Product({ name: body.name, price: body.price, description: body.description });
+        const { productName, description, stock, price } = body;
+        const product = new Product({ productName: productName, description: description, stock: stock, price: price });
         await product.save();
         return new Response(JSON.stringify({ message: 'Product added', id: product._id }), { status: 201 });
     } catch (error) {
