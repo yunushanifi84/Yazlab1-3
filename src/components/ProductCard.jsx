@@ -5,10 +5,19 @@ export default function ProductCard({ products }) {
 
     const handleAddToCart = (product) => {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart.push(product.id);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(localStorage.getItem('cart')
-        )
+        console.log(cart);
+        const existingProduct = cart.find((item) => item.id === product.id);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        else {
+            cart.push({ id: product.id, quantity: 1 });
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+
+        console.log(localStorage.getItem('cart'));
     }
 
 
@@ -26,6 +35,7 @@ export default function ProductCard({ products }) {
                     <p className='price'>{product.price}</p>
 
                 </div>
+
                 <button className="add-button" onClick={() => handleAddToCart(product)}>
                     Sepete Ekle
                 </button>
