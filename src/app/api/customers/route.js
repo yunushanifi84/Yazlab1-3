@@ -33,7 +33,7 @@ export async function POST(request) {
 
         const body = await request.json();
         const result = await db.collection('customers').insertOne(body);
-
+        //console.log("result", result);
         return new Response(JSON.stringify({ message: 'customer added', id: result.insertedId }), {
             status: 201,
         });
@@ -42,3 +42,5 @@ export async function POST(request) {
         return new Response(JSON.stringify({ error: 'Failed to add user' }), { status: 500 });
     }
 }
+
+

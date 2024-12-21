@@ -1,0 +1,16 @@
+{
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "tailwindCSS.includeLanguages": {
+        "plaintext": "html",
+        "javascript": "javascript",
+        "javascriptreact": "javascript",
+        "typescript": "typescript",
+        "typescriptreact": "typescript"
+    },
+    "tailwindCSS.experimental.configFile": "./tailwind.config.js",
+    "tailwindCSS.emmetCompletions": true,
+    "emmet.triggerExpansionOnTab": true,
+    "editor.quickSuggestions": {
+        "strings": true
+    }
+}
