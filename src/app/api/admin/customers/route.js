@@ -1,4 +1,5 @@
 import Customer from "@/models/CustomerModel";
+import db from "@/lib/mongodb";
 
 
 // Tüm müşterileri getir
@@ -10,6 +11,7 @@ export async function GET(request) {
         const customers = await Customer.find({});
         return new Response(JSON.stringify(customers), { status: 200 });
     } catch (error) {
+        console.error('Error fetching customers:', error);
         return new Response(JSON.stringify({ error: 'Failed to fetch customers' }), { status: 500 });
     }
 }

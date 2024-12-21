@@ -18,6 +18,7 @@ const CustomersTable = () => {
             try {
                 const response = await axios.get("/api/admin/customers");
                 setCustomers(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching customers:", error);
             }
@@ -38,6 +39,7 @@ const CustomersTable = () => {
             setCustomers([...customers, response.data]);
             setIsModalOpen(false);
             setNewCustomer({ name: "", email: "", phone: "" });
+            window.location.reload();
         } catch (error) {
             console.error("Error adding customer:", error);
         }
@@ -122,7 +124,7 @@ const CustomersTable = () => {
                                 >
                                     <option value="">Müşteri Tipi Seçin</option>
                                     <option value="Premium">Premium</option>
-                                    <option value="Standart">Standart</option>
+                                    <option value="Standard">Standard</option>
                                 </select>
                             </div>
                             <div className="flex justify-end">
@@ -146,27 +148,34 @@ const CustomersTable = () => {
             )}
 
             <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200">
+                <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-700 text-sm">
                     <thead>
-                        <tr>
-                            <th className="px-4 py-2 border-b">ID</th>
-                            <th className="px-4 py-2 border-b">Ad</th>
-                            <th className="px-4 py-2 border-b">Email</th>
-                            <th className="px-4 py-2 border-b">Telefon</th>
+                        <tr className="bg-gray-200 dark:bg-gray-700">
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">ID</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Ad</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Email</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Şifre</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {customers.map((customer) => (
-                            <tr key={customer.id} className="hover:bg-gray-100">
-                                <td className="px-4 py-2 border-b">{customer.id}</td>
-                                <td className="px-4 py-2 border-b">{customer.name}</td>
-                                <td className="px-4 py-2 border-b">{customer.email}</td>
-                                <td className="px-4 py-2 border-b">{customer.phone}</td>
+                        {customers.map((customer, index) => (
+                            <tr
+                                key={customer._id}
+                                className={`${index % 2 === 0
+                                    ? "bg-gray-100 dark:bg-gray-800"
+                                    : "bg-white dark:bg-gray-900"
+                                    } hover:bg-gray-200 dark:hover:bg-gray-700`}
+                            >
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer._id}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer.CustomerName}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer.Email}</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{customer.Password}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
         </div>
     );
 };
