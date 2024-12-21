@@ -1,4 +1,5 @@
 import Order from "@/models/OrderModel";
+import db from "@/lib/mongodb";
 
 
 //tüm siparişleri getirir

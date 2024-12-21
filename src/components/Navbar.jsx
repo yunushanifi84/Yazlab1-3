@@ -29,6 +29,7 @@ const Navbar = () => {
         localStorage.removeItem("email");
         setIsAuthenticated(false);
         setIsAdmin(false);
+        location.href = "/";
     };
 
     const handleSearchSubmit = (e) => {

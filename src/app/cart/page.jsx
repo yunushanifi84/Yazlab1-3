@@ -54,7 +54,7 @@ export default function CartPage() {
                         return (
                             <div className="cart-item" key={product.id}>
                                 <div className="cart-item-image">
-                                    <Image src={product.image} width={100} height={100} alt={product.name} />
+                                    <Image src={product.image} width={100} height={100} alt={`Image of ${product.name}`} />
                                 </div>
                                 <div className="cart-item-details">
                                     <h2 className="cart-item-title">{product.name}</h2>
@@ -65,7 +65,7 @@ export default function CartPage() {
                                                 src={minusIcon}
                                                 width={15}
                                                 height={15}
-                                                alt={product.title}
+                                                alt="Decrease quantity"
                                                 onClick={() => handleQuantityChange(product.id, product.quantity - 1)}
                                             />
                                             <span className='product-quantity'>{product.quantity}</span>
@@ -73,12 +73,13 @@ export default function CartPage() {
                                                 src={plusIcon}
                                                 width={15}
                                                 height={15}
-                                                alt={product.title}
+                                                alt="Increase quantity"
                                                 onClick={() => handleQuantityChange(product.id, product.quantity + 1)}
                                             />
                                         </label>
 
                                         <button onClick={() => handleRemove(product.id)}>Kaldır</button>
+
                                     </div>
                                 </div>
                             </div>
