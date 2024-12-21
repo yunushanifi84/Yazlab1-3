@@ -6,7 +6,7 @@ export async function POST(request) {
     try {
         const { email, password } = await request.json();
         // CustomerModel'i kullanarak müşteri bulma
-
+        console.log(email, password);
         if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
             const token = generateToken({ email: process.env.ADMIN_EMAIL });
             return new Response(JSON.stringify({ token }), { status: 200 });

@@ -10,13 +10,17 @@ function LoginPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/login', {
-            Email: email,
-            Password: password
+        axios.post('/api/user/login', {
+            email: email,
+            password: password
         }).then((response) => {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
-
+                localStorage.setItem('email', email);
+            }
+            if (email === process.env.ADMIN_EMAIL) {
+                window.location.href = '/admin';
+                return;
             }
             window.location.href = '/';
         }).catch((error) => {
@@ -64,14 +68,7 @@ function LoginPage() {
                     >
                         Giriş Yap
                     </button>
-                    <div className="mt-4 text-center">
-                        <p className="text-gray-700">
-                            Hesabınız yok mu?{' '}
-                            <a href="/register" className="text-blue-500 hover:underline">
-                                Kayıt Ol
-                            </a>
-                        </p>
-                    </div>
+
                 </form>
             </div>
         </div>

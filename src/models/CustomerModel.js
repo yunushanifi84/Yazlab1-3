@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
-    CustomerID: { type: String, required: true, unique: true },
     CustomerName: { type: String, required: true },
     Budget: { type: Number, required: true },
     CustomerType: { type: String, enum: ['Premium', 'Standard'], required: true },

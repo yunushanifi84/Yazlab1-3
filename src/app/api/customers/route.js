@@ -2,12 +2,7 @@ import Customer from '@/models/CustomerModel';
 import { generateToken, verifyToken } from '@/lib/jwt';
 
 export async function GET(request) {
-    const token = request.headers.get('Authorization')?.split(' ')[1];
-    const decoded = verifyToken(token);
 
-    if (!decoded) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
 
     try {
         // Tüm müşterileri getir
