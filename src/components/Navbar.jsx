@@ -92,10 +92,16 @@ const Navbar = () => {
                                         Müşteriler
                                     </Link>
                                     <Link
-                                        href="/admin"
+                                        href="/admin/logs"
                                         className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
                                     >
-                                        Loglar
+                                        Günlük Kayıtları
+                                    </Link>
+                                    <Link
+                                        href="/admin/orders"
+                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
+                                    >
+                                        Siparişler
                                     </Link>
 
                                 </div>

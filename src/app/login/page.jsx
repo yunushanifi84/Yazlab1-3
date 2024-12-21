@@ -24,7 +24,6 @@ function LoginPage() {
             }
             window.location.href = '/';
         }).catch((error) => {
-            console.log(error);
         });
     };
 

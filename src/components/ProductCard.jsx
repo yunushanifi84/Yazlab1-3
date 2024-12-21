@@ -5,7 +5,6 @@ export default function ProductCard({ products }) {
 
     const handleAddToCart = (product) => {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        console.log(cart);
         const existingProduct = cart.find((item) => item.id === product.id);
         if (existingProduct) {
             existingProduct.quantity += 1;
@@ -17,7 +16,6 @@ export default function ProductCard({ products }) {
         }
 
 
-        console.log(localStorage.getItem('cart'));
     }
 
 

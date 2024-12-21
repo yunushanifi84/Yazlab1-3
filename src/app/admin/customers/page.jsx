@@ -18,7 +18,6 @@ const CustomersTable = () => {
             try {
                 const response = await axios.get("/api/admin/customers");
                 setCustomers(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching customers:", error);
             }
