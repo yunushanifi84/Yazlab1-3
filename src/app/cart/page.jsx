@@ -34,19 +34,12 @@ export default function CartPage() {
 
     useEffect(() => {
 
-        let temp
-        products.map((product) => {
-            const existingProduct = loadCart().find((item) => item.id === product.id);
-            if (existingProduct) {
-
-            }
-            cart.push(product);
-        })
-
-        if (cart.length === 0) {
-            return;
-        }
-        setCart(cart);
+        const storedCart = loadCart();
+        const updatedCart = storedCart.map((item) => {
+            const product = products.find((product) => product.id === item.id);
+            return { ...product, quantity: item.quantity };
+        });
+        setCart(updatedCart);
     }, []);
 
     return (
@@ -67,7 +60,7 @@ export default function CartPage() {
                                     <h2 className="cart-item-title">{product.name}</h2>
                                     <p className="cart-item-price">{product.price} TL</p>
                                     <div className="cart-item-actions">
-                                        <label style={{ marginRight: "auto", color: "black" }}>
+                                        <label style={{ marginRight: "auto", color: "black", display: "flex", alignItems: "center" }}>
                                             <Image
                                                 src={minusIcon}
                                                 width={15}
@@ -75,12 +68,7 @@ export default function CartPage() {
                                                 alt={product.title}
                                                 onClick={() => handleQuantityChange(product.id, product.quantity - 1)}
                                             />
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={product.quantity || 1}
-                                                onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value))}
-                                            />
+                                            <span className='product-quantity'>{product.quantity}</span>
                                             <Image
                                                 src={plusIcon}
                                                 width={15}
@@ -89,6 +77,7 @@ export default function CartPage() {
                                                 onClick={() => handleQuantityChange(product.id, product.quantity + 1)}
                                             />
                                         </label>
+
                                         <button onClick={() => handleRemove(product.id)}>Kaldır</button>
                                     </div>
                                 </div>
@@ -96,7 +85,8 @@ export default function CartPage() {
                         );
                     })}
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }
