@@ -22,7 +22,7 @@ export default function CartPage() {
     };
 
     const handleRemove = (productId) => {
-        const updatedCart = storedCart.filter((item) => item.id !== productId);
+        const updatedCart = storedCart.filter((item) => item.ProductID !== productId);
         setStoredCart(updatedCart);
         updateLocalStorage(updatedCart);
     };
@@ -31,7 +31,7 @@ export default function CartPage() {
         console.log("minusOrPlus", minusOrPlus);
 
         const updatedCart = loadCart().map((item) =>
-            item.id === productId ? { ...item, quantity: item.quantity + minusOrPlus } : item
+            item.ProductID === productId ? { ...item, Quantity: item.quantity + minusOrPlus } : item
         );
         setStoredCart(updatedCart);
         updateLocalStorage(updatedCart);
@@ -42,14 +42,14 @@ export default function CartPage() {
         const localCart = loadCart();
         if (localCart.length !== 0) {
             const products = async () => {
-                const response = await axios.post('http://localhost:3000/api/products/getProductsByList', { ids: localCart.map((item) => item.id) });
+                const response = await axios.post('http://localhost:3000/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
                 return response.data;
             }
 
             products().then((products) => {
                 const updatedCart = localCart.map((item) => {
-                    const product = products.find((product) => product._id === item.id);
-                    return { ...product, quantity: item.quantity };
+                    const product = products.find((product) => product._id === item.ProductID);
+                    return { ...product, Quantity: item.Quantity };
                 });
                 setCart(updatedCart);
             });
@@ -59,6 +59,19 @@ export default function CartPage() {
         }
 
     }, [storedCart]);
+
+    const handleClickPurchase = (e) => {
+        e.preventDefault();
+        const localCart = loadCart();
+        const response = axios.post('http://localhost:3000/api/orders',
+            {
+                CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: 0
+            }
+        );
+        console.log("response", response);
+
+
+    }
 
 
 
@@ -89,7 +102,7 @@ export default function CartPage() {
                                                     alt="Decrease quantity"
                                                     onClick={() => handleQuantityChange(product._id, -1)}
                                                 />
-                                                <span className='product-quantity'>{loadCart().find((item) => item.id === product._id)?.quantity}</span>
+                                                <span className='product-quantity'>{loadCart().find((item) => item.ProductID === product._id)?.Quantity}</span>
                                                 <Image
                                                     src={plusIcon}
                                                     width={15}
@@ -111,9 +124,24 @@ export default function CartPage() {
                 }
             </div >
             <div className='cart-purchase'>
-
-
+                <h2>Ödeme Bilgileri</h2>
+                <form className="payment-form">
+                    <label>
+                        Kart Numarası:
+                        <input type="text" placeholder="**** **** **** ****" defaultValue={"123456789000"} />
+                    </label>
+                    <label>
+                        Son Kullanma Tarihi:
+                        <input type="text" placeholder="AA/YY" defaultValue={"01/01"} />
+                    </label>
+                    <label>
+                        CVV:
+                        <input type="text" placeholder="***" defaultValue={"123"} />
+                    </label>
+                    <button className="purchase-button" onClick={handleClickPurchase}>Satın Al</button>
+                </form>
             </div>
+
         </div>
     );
 }
