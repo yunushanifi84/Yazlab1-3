@@ -5,6 +5,7 @@ import minusIcon from '@/images/Icons/minus.png';
 import plusIcon from '@/images/Icons/plus.png';
 import Image from 'next/image';
 import { products } from '@/utils/products';
+import axios from 'axios';
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
@@ -33,6 +34,9 @@ export default function CartPage() {
     };
 
     useEffect(() => {
+        const fetchProductsByIds = async (ids) => {
+            await axios.post('/api/products/getProductsByList', { ids })
+        }
 
         const storedCart = loadCart();
         const updatedCart = storedCart.map((item) => {
