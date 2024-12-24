@@ -6,13 +6,13 @@ export default function ProductCard({ products }) {
 
     const handleAddToCart = (product) => {
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProduct = cart.find((item) => item.id === product.id);
+        const existingProduct = cart.find((item) => item.ProductID === product._id);
         if (existingProduct) {
-            existingProduct.quantity += 1;
+            existingProduct.Quantity += 1;
             localStorage.setItem('cart', JSON.stringify(cart));
         }
         else {
-            cart.push({ id: product.id, quantity: 1 });
+            cart.push({ ProductID: product._id, Quantity: 1 });
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
