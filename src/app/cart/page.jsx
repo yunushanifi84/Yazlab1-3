@@ -42,7 +42,7 @@ export default function CartPage() {
         const localCart = loadCart();
         if (localCart.length !== 0) {
             const products = async () => {
-                const response = await axios.post('http://localhost:3000/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
+                const response = await axios.post('/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
                 return response.data;
             }
 
