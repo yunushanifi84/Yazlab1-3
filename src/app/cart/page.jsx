@@ -31,7 +31,7 @@ export default function CartPage() {
         console.log("minusOrPlus", minusOrPlus);
 
         const updatedCart = loadCart().map((item) =>
-            item.ProductID === productId ? { ...item, Quantity: item.quantity + minusOrPlus } : item
+            item.ProductID === productId ? { ...item, Quantity: item.Quantity + minusOrPlus } : item
         );
         setStoredCart(updatedCart);
         updateLocalStorage(updatedCart);
