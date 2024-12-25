@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,7 @@ const Navbar = () => {
         localStorage.removeItem("email");
         setIsAuthenticated(false);
         setIsAdmin(false);
+        location.href = "/";
     };
 
     const handleSearchSubmit = (e) => {
@@ -43,9 +45,9 @@ const Navbar = () => {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
-                            <a href="/" className="text-white font-bold text-xl">
+                            <Link href="/" className="text-white font-bold text-xl">
                                 Shopy
-                            </a>
+                            </Link>
                         </div>
                         {!isAdmin && <div className="ml-4 flex">
                             <form onSubmit={handleSearchSubmit} className="flex">
@@ -85,35 +87,45 @@ const Navbar = () => {
 
                             {isAdmin && (
                                 <div>
-                                    <a
-                                        href="/admin"
-                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
-                                    >
+                                    <Link
+                                        href="/admin/products"
+                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200">
+                                        Ürünler
+                                    </Link>
+                                    <Link
+                                        href="/admin/customers"
+                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200">
                                         Müşteriler
-                                    </a>
-                                    <a
-                                        href="/admin"
+                                    </Link>
+                                    <Link
+                                        href="/admin/logs"
                                         className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
                                     >
-                                        Loglar
-                                    </a>
+                                        Günlük Kayıtları
+                                    </Link>
+                                    <Link
+                                        href="/admin/orders"
+                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
+                                    >
+                                        Siparişler
+                                    </Link>
 
                                 </div>
                             )}
                             {!isAdmin && (
                                 <div>
-                                    <a
+                                    <Link
                                         href="/"
                                         className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
                                     >
                                         Anasayfa
-                                    </a>
-                                    <a
+                                    </Link>
+                                    <Link
                                         href="/cart"
                                         className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
                                     >
                                         Sepete Git
-                                    </a>
+                                    </Link>
                                 </div>
 
                             )}

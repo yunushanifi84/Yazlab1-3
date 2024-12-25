@@ -7,12 +7,6 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #f2f2f2;
-    --foreground: #f2f2f2;
-  }
-}
 
 html,
 body {
@@ -37,10 +31,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }

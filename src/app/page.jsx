@@ -1,9 +1,23 @@
 "use client"
 import "./page.css";
-import { products } from "@/utils/products";
 import ProductCard from "@/components/ProductCard";
+import { useEffect ,useState} from "react";
+import axios from "axios";
 export default function Home() {
+  const [products, setProducts] = useState([]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('/api/products');
+        console.log(response.data);
+        setProducts(response.data)
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
 
 
