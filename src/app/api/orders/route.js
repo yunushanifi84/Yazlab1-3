@@ -1,5 +1,6 @@
 import db from '@/lib/mongodb';
 import Order from '@/models/OrderModel';
+import { CustomerLog } from '@/models/CustomerLogModel';
 import { Types } from 'mongoose';
 
 export async function POST(request) {
