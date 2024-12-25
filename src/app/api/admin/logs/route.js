@@ -3,7 +3,7 @@ import Log from '@/models/LogModel';
 //tüm logları getir
 export async function GET(req, res) {
     try {
-        const logs = await Log.find({});
+        const logs = await Log.find({}, null, { sort: { LogDate: -1 } });
         return new Response(JSON.stringify(logs), { status: 200 });
     } catch (error) {
         console.error("Error during fetch:", error);

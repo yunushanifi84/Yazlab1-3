@@ -1,4 +1,5 @@
 import Product from '@/models/ProductModel';
+import db from '@/lib/mongodb';
 
 export async function GET(request) {
     try {

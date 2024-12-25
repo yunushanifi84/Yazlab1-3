@@ -1,4 +1,13 @@
 /* Genel container */
+.maincontainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin: 5% 5% 0 auto;
+}
+
+
 .cart-container {
     display: flex;
     flex-direction: column;
@@ -124,4 +133,51 @@
     border: 1px solid #807e7e;
     border-radius: 10px;
     padding: 5px 14px;
+}
+
+.cart-purchase {
+    margin-top: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.payment-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    color: #333;
+}
+
+.payment-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.purchase-button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.purchase-button:hover {
+    background-color: #218838;
 }
