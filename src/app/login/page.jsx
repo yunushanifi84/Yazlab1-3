@@ -18,6 +18,7 @@ function LoginPage() {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('email', email);
                 localStorage.setItem('CustomerID', response.data.CustomerID);
+                localStorage.setItem('CustomerType', response.data.CustomerType);
             }
             if (email === process.env.ADMIN_EMAIL) {
                 window.location.href = '/admin';

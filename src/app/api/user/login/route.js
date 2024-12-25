@@ -18,7 +18,8 @@ export async function POST(request) {
         }
         const CustomerID = customer._id;
         const token = generateToken({ email: customer.email });
-        return new Response(JSON.stringify({ token, CustomerID }), { status: 200 });
+        console.log(customer);
+        return new Response(JSON.stringify({ token, CustomerID ,CustomerType:customer.CustomerType}), { status: 200 });
     } catch (error) {
         return new Response(JSON.stringify({ error: 'Failed to login' }), { status: 500 });
     }

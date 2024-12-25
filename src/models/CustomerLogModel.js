@@ -6,7 +6,7 @@ const logSchema = new mongoose.Schema({
     CustomerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
     CustomerType: { type: String, enum: ['Premium', 'Standard'], required: true },
     OrderDetails: { type: String, required: true },
-    OrderTime: { type: Date, required: true , default: Date.now},
+    OrderTime: { type: Date, required: true},
     LogDetails: { type: String, required: true }
 });
 

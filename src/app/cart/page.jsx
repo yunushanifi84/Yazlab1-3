@@ -63,9 +63,9 @@ export default function CartPage() {
     const handleClickPurchase = (e) => {
         e.preventDefault();
         const localCart = loadCart();
-        const response = axios.post('http://localhost:3000/api/orders',
+        const response = axios.post('/api/orders',
             {
-                CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: 0
+                CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: 0, CustomerType: localStorage.getItem('CustomerType')
             }
         );
         console.log("response", response);
