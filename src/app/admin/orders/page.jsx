@@ -27,6 +27,7 @@ const Order = () => {
             const now = new Date();
             setOrders((prevOrders) =>
                 prevOrders.map((order) => {
+                    if (order.OrderStatus === "Sipariş Onaylandı") return order;
                     const waitingTime = Math.floor((now - new Date(order.OrderDate)) / 1000);
                     const priorityScore =
                         (order.CustomerID.CustomerType === "Premium" ? 15 : 10) + (waitingTime * waitingTime * 0.5);
