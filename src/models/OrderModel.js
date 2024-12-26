@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema({
     ],
     TotalPrice: { type: Number, required: true },
     OrderDate: { type: Date, default: Date.now },
-    OrderStatus: { type: String, enum: ['Pending', 'Completed', 'Cancelled'], default: 'Pending' }
+    OrderStatus: { type: String, enum: ['Bekliyor', 'Sipariş İşleniyor', 'Sipariş Onaylandı'], default: 'Bekliyor' }
 });
 
 const Order = mongoose.models.Order || mongoose.model('Order', orderSchema, 'orders');
