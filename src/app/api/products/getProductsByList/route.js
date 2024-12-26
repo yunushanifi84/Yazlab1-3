@@ -4,7 +4,6 @@ export async function POST(request) {
     try {
         const body = await request.json();
         const { ids } = body;
-        console.log("IDSSSSSSSSSS ", ids);
         // ObjectId'ye dönüştürmeden `ids` listesini doğrudan kullanıyoruz
         const products = await Product.find({ _id: { $in: ids } }).exec();
 

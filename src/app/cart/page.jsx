@@ -28,7 +28,6 @@ export default function CartPage() {
     };
 
     const handleQuantityChange = (productId, minusOrPlus) => {
-        console.log("minusOrPlus", minusOrPlus);
 
         const updatedCart = loadCart().map((item) =>
             item.ProductID === productId ? { ...item, Quantity: item.Quantity + minusOrPlus } : item
@@ -68,7 +67,6 @@ export default function CartPage() {
                 CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: 0, CustomerType: localStorage.getItem('CustomerType')
             }
         );
-        console.log("response", response);
 
 
     }
