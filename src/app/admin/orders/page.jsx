@@ -114,15 +114,13 @@ const Order = () => {
                     </thead>
                     <tbody>
                         {orders.map((order, index) => {
-                            // order türüne göre sınıf belirle
                             let orderClass = "";
-                            // order türüne göre sınıf belirle
                             if (order.OrderStatus === "Sipariş Onaylandı") {
                                 orderClass = "bg-green-200 dark:bg-green-800";
                             } else if (order.OrderStatus === "Sipariş İşleniyor") {
                                 orderClass = "bg-yellow-200 dark:bg-yellow-800";
                             } else {
-                                orderClass = "bg-red-200 dark:bg-red-800";
+                                orderClass = "bg-gray-200 dark:bg-gray-800";
                             }
 
                             return (
