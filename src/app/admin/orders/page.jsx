@@ -41,56 +41,63 @@ const Order = () => {
     }, [orders]);
 
     const handleSubmitOrders = async () => {
-
         try {
             // Öncelikle tüm siparişleri "Sipariş İşleniyor" durumuna geçir
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
-                    order.OrderStatus !== "Sipariş Onaylandı " && order.OrderStatus !== "Sipariş İptal Edildi"
+                    order.OrderStatus !== "Sipariş Onaylandı" && order.OrderStatus !== "Sipariş İptal Edildi"
                         ? { ...order, OrderStatus: "Sipariş İşleniyor" }
                         : order
                 )
             );
 
-            // Sırayla her siparişi "Sipariş Onaylandı" durumuna geçir
-            for (const order of orders) {
-                // 3 saniye bekle
-                console.log(order.OrderStatus);
-                if (order.OrderStatus === "Sipariş Onaylandı" || order.OrderStatus === "Sipariş İptal Edildi") continue;
+            for (let i = 0; i < orders.length; i++) {
+                // En güncel `orders` durumunu alın
+                const latestOrders = [...orders];
+                const currentOrder = latestOrders[i];
 
+                console.log("currentOrder", currentOrder);
+
+                // Eğer sipariş zaten "Sipariş Onaylandı" veya "Sipariş İptal Edildi" ise atla
+                if (currentOrder.OrderStatus === "Sipariş Onaylandı" || currentOrder.OrderStatus === "Sipariş İptal Edildi") {
+                    continue;
+                }
+
+                // 5 saniye bekle
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
-                // Sipariş durumunu güncelle
                 try {
-                    // State güncellemesi
-                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: order._id, OrderStatus: "Sipariş Onaylandı" })
-                        .then(() => {
-                            setOrders((prevOrders) =>
-                                prevOrders.map((ordr) =>
-                                    ordr._id === order._id && ordr.OrderStatus === "Sipariş İşleniyor" ? { ...ordr, OrderStatus: "Sipariş Onaylandı" } : ordr
-                                )
-                            );
-                        }).catch((error) => {
-                            console.error(`Error updating order ${order._id}:`, error);
-                            setOrders((prevOrders) =>
-                                prevOrders.map((ordr) =>
-                                    ordr._id === order._id && ordr.OrderStatus === "Sipariş İşleniyor" ? { ...ordr, OrderStatus: "Sipariş İptal Edildi" } : ordr
-                                )
-                            );
-                        }
-                        )
-                        ;
+                    // Sipariş durumunu "Sipariş Onaylandı" olarak güncelle
+                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: currentOrder._id, OrderStatus: "Sipariş Onaylandı" });
 
+                    // State güncellemesi
+                    setOrders((prevOrders) =>
+                        prevOrders.map((ordr) =>
+                            ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
+                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: 0 }
+                                : ordr
+                        )
+                    );
                 } catch (error) {
-                    console.error(`Error updating order ${order._id}:`, error);
+                    console.error(`Error updating order ${currentOrder._id}:`, error);
+
+                    // Hata durumunda sipariş "Sipariş İptal Edildi" olarak işaretlenir
+                    setOrders((prevOrders) =>
+                        prevOrders.map((ordr) =>
+                            ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
+                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: 0 }
+                                : ordr
+                        )
+                    );
                 }
             }
         } catch (error) {
             console.error("Error submitting orders:", error);
         }
 
+        // Yeni siparişleri kontrol et
         const checkNewOrders = async () => {
-            await new Promise(() => setCheckNewOrder(!checkNewOrder));
+            setCheckNewOrder((prev) => !prev);
         };
         await checkNewOrders();
     };
