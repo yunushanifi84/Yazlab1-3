@@ -61,15 +61,13 @@ const Order = () => {
 
                 // Sipariş durumunu güncelle
                 try {
-
                     // State güncellemesi
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === order._id && ordr.OrderStatus === "Sipariş İşleniyor" ? { ...ordr, OrderStatus: "Sipariş Onaylandı" } : ordr
                         )
                     );
-                    const response = await axios.put(`/api/admin/orders/updateOrder`, { orderId: order._id, OrderStatus: "Sipariş Onaylandı" });
-
+                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: order._id, OrderStatus: "Sipariş Onaylandı" });
                 } catch (error) {
                     console.error(`Error updating order ${order._id}:`, error);
                 }
@@ -82,7 +80,6 @@ const Order = () => {
             await new Promise(() => setCheckNewOrder(!checkNewOrder));
         };
         await checkNewOrders();
-
     };
 
 
