@@ -116,17 +116,17 @@ const Order = () => {
                         {orders.map((order, index) => {
                             let orderClass = "";
                             if (order.OrderStatus === "Sipariş Onaylandı") {
-                                orderClass = "bg-green-200 dark:bg-green-800";
+                                orderClass = "bg-green-200 dark:bg-green-800 hover:bg-green-300";
                             } else if (order.OrderStatus === "Sipariş İşleniyor") {
-                                orderClass = "bg-yellow-200 dark:bg-yellow-800";
+                                orderClass = "bg-yellow-200 dark:bg-yellow-800 hover:bg-yellow-300";
                             } else {
-                                orderClass = "bg-gray-200 dark:bg-gray-800";
+                                orderClass = "bg-gray-200 dark:bg-gray-800 hover:bg-gray-300";
                             }
 
                             return (
                                 <tr
                                     key={order._id}
-                                    className={`${orderClass} hover:bg-gray-200 dark:hover:bg-gray-700`}
+                                    className={`${orderClass} `}
                                 >
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order._id}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderStatus}</td>
