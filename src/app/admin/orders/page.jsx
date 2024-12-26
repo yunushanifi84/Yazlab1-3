@@ -27,7 +27,7 @@ const Order = () => {
             const now = new Date();
             setOrders((prevOrders) =>
                 prevOrders.map((order) => {
-                    if (order.OrderStatus === "Sipariş Onaylandı") return order;
+                    if (order.OrderStatus === "Sipariş Onaylandı" || order.OrderStatus === "Sipariş İptal Edildi") return order;
                     const waitingTime = Math.floor((now - new Date(order.OrderDate)) / 1000);
                     const priorityScore =
                         (order.CustomerID.CustomerType === "Premium" ? 15 : 10) + (waitingTime * waitingTime * 0.5);
@@ -46,7 +46,7 @@ const Order = () => {
             // Öncelikle tüm siparişleri "Sipariş İşleniyor" durumuna geçir
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
-                    order.OrderStatus !== "Sipariş Onaylandı"
+                    order.OrderStatus !== "Sipariş Onaylandı " && order.OrderStatus !== "Sipariş İptal Edildi"
                         ? { ...order, OrderStatus: "Sipariş İşleniyor" }
                         : order
                 )
@@ -55,19 +55,32 @@ const Order = () => {
             // Sırayla her siparişi "Sipariş Onaylandı" durumuna geçir
             for (const order of orders) {
                 // 3 saniye bekle
-                if (order.OrderStatus === "Sipariş Onaylandı") continue;
+                console.log(order.OrderStatus);
+                if (order.OrderStatus === "Sipariş Onaylandı" || order.OrderStatus === "Sipariş İptal Edildi") continue;
 
                 await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 // Sipariş durumunu güncelle
                 try {
                     // State güncellemesi
-                    setOrders((prevOrders) =>
-                        prevOrders.map((ordr) =>
-                            ordr._id === order._id && ordr.OrderStatus === "Sipariş İşleniyor" ? { ...ordr, OrderStatus: "Sipariş Onaylandı" } : ordr
+                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: order._id, OrderStatus: "Sipariş Onaylandı" })
+                        .then(() => {
+                            setOrders((prevOrders) =>
+                                prevOrders.map((ordr) =>
+                                    ordr._id === order._id && ordr.OrderStatus === "Sipariş İşleniyor" ? { ...ordr, OrderStatus: "Sipariş Onaylandı" } : ordr
+                                )
+                            );
+                        }).catch((error) => {
+                            console.error(`Error updating order ${order._id}:`, error);
+                            setOrders((prevOrders) =>
+                                prevOrders.map((ordr) =>
+                                    ordr._id === order._id && ordr.OrderStatus === "Sipariş İşleniyor" ? { ...ordr, OrderStatus: "Sipariş İptal Edildi" } : ordr
+                                )
+                            );
+                        }
                         )
-                    );
-                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: order._id, OrderStatus: "Sipariş Onaylandı" });
+                        ;
+
                 } catch (error) {
                     console.error(`Error updating order ${order._id}:`, error);
                 }
@@ -116,6 +129,9 @@ const Order = () => {
                                 orderClass = "bg-green-200 dark:bg-green-800 hover:bg-green-300";
                             } else if (order.OrderStatus === "Sipariş İşleniyor") {
                                 orderClass = "bg-yellow-200 dark:bg-yellow-800 hover:bg-yellow-300";
+                            }
+                            else if (order.OrderStatus === "Sipariş İptal Edildi") {
+                                orderClass = "bg-red-200 dark:bg-red-800 hover:bg-red-300 hover:text-white";
                             } else {
                                 orderClass = "bg-gray-200 dark:bg-gray-800 hover:bg-gray-300";
                             }
@@ -127,7 +143,7 @@ const Order = () => {
                                 >
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order._id}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderStatus}</td>
-                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.orderDetails}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.length} Ürün</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{new Date(order.OrderDate).toLocaleString()}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.priorityScore ? order.priorityScore.toFixed(0) : ""}</td>
                                 </tr>
