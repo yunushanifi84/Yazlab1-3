@@ -11,8 +11,18 @@ const orderSchema = new mongoose.Schema({
     ],
     TotalPrice: { type: Number, required: true },
     OrderDate: { type: Date, default: Date.now },
-    OrderStatus: { type: String, enum: ['Bekliyor', 'Sipariş İşleniyor', 'Sipariş Onaylandı'], default: 'Bekliyor' }
+    OrderStatus: { type: String, enum: ['Bekliyor', 'Sipariş İşleniyor', 'Sipariş Onaylandı', 'Sipariş İptal Edildi'], default: 'Bekliyor' }
 });
+
+orderSchema.methods.updateProductStocks = async function () {
+    for (const item of this.Products) {
+        const product = await mongoose.model('Product').findById(item.ProductID);
+        if (!product) {
+            throw new Error(`Product with ID ${item.ProductID} not found`);
+        }
+        await product.updateStock(item.Quantity);
+    }
+};
 
 const Order = mongoose.models.Order || mongoose.model('Order', orderSchema, 'orders');
 
