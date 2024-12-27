@@ -2,6 +2,7 @@ import Product from '@/models/ProductModel';
 
 export async function GET(request, { params }) {
     const { id } = params;
+    console.log(id);
     try {
         // Verilen ID ile ürün sorgulama
         const product = await Product.findById(id);
@@ -16,4 +17,5 @@ export async function GET(request, { params }) {
         return new Response(JSON.stringify({ error: 'Failed to fetch product' }), { status: 500 });
     }
 }
+
 

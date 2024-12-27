@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ProductModal from "./ProductModal";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ const Products = () => {
         price: "",
     });
     const [imageStream, setImageStream] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -66,6 +68,16 @@ const Products = () => {
         } catch (error) {
             console.error("Ürün eklerken hata oluştu:", error);
         }
+    };
+
+    const handleUpdateProduct = (productId, updatedStock) => {
+        setProducts(products.map(product => 
+            product._id === productId ? { ...product, stock: updatedStock } : product
+        ));
+    };
+
+    const handleDeleteProduct = (productId) => {
+        setProducts(products.filter(product => product._id !== productId));
     };
 
     return (
@@ -165,6 +177,15 @@ const Products = () => {
                 </div>
             )}
 
+            {selectedProduct && (
+                <ProductModal
+                    product={selectedProduct}
+                    onClose={() => setSelectedProduct(null)}
+                    onUpdate={handleUpdateProduct}
+                    onDelete={handleDeleteProduct}
+                />
+            )}
+
             <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-700 text-sm">
                     <thead>
@@ -184,7 +205,8 @@ const Products = () => {
                                     index % 2 === 0
                                         ? "bg-gray-100 dark:bg-gray-800"
                                         : "bg-white dark:bg-gray-900"
-                                } hover:bg-gray-200 dark:hover:bg-gray-700`}
+                                } hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer`}
+                                onClick={() => setSelectedProduct(product)}
                             >
                                 <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product._id}</td>
                                 <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{product.productName}</td>
