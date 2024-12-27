@@ -74,7 +74,7 @@ const Order = () => {
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
-                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: 0 }
+                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: Number.MAX_SAFE_INTEGER }
                                 : ordr
                         )
                     );
@@ -85,7 +85,7 @@ const Order = () => {
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
-                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: 0 }
+                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: Number.MAX_SAFE_INTEGER }
                                 : ordr
                         )
                     );
