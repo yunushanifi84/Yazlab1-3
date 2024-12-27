@@ -6,7 +6,7 @@ import plusIcon from '@/images/Icons/plus.png';
 import Image from 'next/image';
 import axios from 'axios';
 import bufferToBase64 from '@/utils/imageConverter';
-import { get } from 'mongoose';
+import { ToastContainer , toast} from 'react-toastify';
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
@@ -61,12 +61,30 @@ export default function CartPage() {
 
     const handleClickPurchase = (e) => {
         e.preventDefault();
+        const toastId = toast.loading('Ödeme işlemi gerçekleştiriliyor...', { autoClose: false });
+        if(localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined"){
+            toast.update(toastId, { type: 'info', render: 'Lütfen önce giriş yapınız.', autoClose: 500, isLoading: false });
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1500);
+            return;
+        }
+
         const localCart = loadCart();
         const response = axios.post('/api/orders',
             {
                 CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: 0, CustomerType: localStorage.getItem('CustomerType')
             }
-        );
+        ).then((response) => {
+            if (response.status === 200) {
+                toast.update(toastId, { type: 'success', render: 'Ödeme işlemi başarılı.', autoClose: 1000 , isLoading: false});
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            }
+        }).catch((error) => {
+            toast.update(toastId, { type: 'error', render: 'Ödeme işlemi sırasında bir hata oluştu.', autoClose: 1000 , isLoading: false});
+        });
 
 
     }
@@ -75,6 +93,7 @@ export default function CartPage() {
 
     return (
         <div className="maincontainer">
+            <ToastContainer />
             <div className="cart-container">
                 <h1 className="cart-title">Sepetiniz</h1>
                 {cart.length === 0 ? (

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import "./page.module.css";
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ function LoginPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const toastId = toast.loading('Giriş yapılıyor...', { autoClose: false });
         axios.post('/api/user/login', {
             email: email,
             password: password
@@ -20,11 +22,15 @@ function LoginPage() {
                 localStorage.setItem('CustomerID', response.data.CustomerID);
                 localStorage.setItem('CustomerType', response.data.CustomerType);
             }
-            if (email === process.env.ADMIN_EMAIL) {
-                window.location.href = '/admin';
-                return;
-            }
-            window.location.href = '/';
+            toast.update(toastId, { render: 'Giriş başarılı!', type: "success", autoClose: 2000, isLoading: false });
+            setTimeout(() => {
+                if (email === process.env.ADMIN_EMAIL) {
+                    window.location.href = '/admin/products';
+                    return;
+                }
+                window.location.href = '/';
+            }, 500)
+
         }).catch((error) => {
         });
     };
@@ -32,6 +38,7 @@ function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <ToastContainer />
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-semibold mb-6 text-center">Giriş Yap</h2>
                 <form onSubmit={handleSubmit}>
