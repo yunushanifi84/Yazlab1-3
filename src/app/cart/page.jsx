@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 export default function CartPage() {
     const [cart, setCart] = useState([]);
     const [storedCart, setStoredCart] = useState([]);
+    const [customer, setCustomer] = useState({});
     const loadCart = () => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -62,7 +63,15 @@ export default function CartPage() {
 
     }, [storedCart]);
 
-    const handleClickPurchase = (e) => {
+    useEffect(() => {
+        axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
+            console.log("customer ", response.data);
+            setCustomer(response.data);
+        });
+
+    }, []);
+
+    const handleClickPurchase = async (e) => {
         e.preventDefault();
         const toastId = toast.loading('Ödeme işlemi gerçekleştiriliyor...', { autoClose: false });
         if (localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined") {
@@ -74,7 +83,14 @@ export default function CartPage() {
         }
 
         const localCart = loadCart();
-        const response = axios.post('/api/orders',
+        console.log("customer " + customer.Budget);
+        if (customer.Budget - calculateTotalPrice() < 0) {
+            toast.update(toastId, { type: 'error', render: 'Bakiyeniz yetersiz.', autoClose: 1000, isLoading: false });
+            return;
+        }
+
+
+        await axios.post('/api/orders',
             {
                 CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: calculateTotalPrice(), CustomerType: localStorage.getItem('CustomerType')
             }

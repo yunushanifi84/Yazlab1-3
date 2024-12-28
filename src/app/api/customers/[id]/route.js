@@ -1,16 +1,12 @@
 import { ObjectId } from 'mongodb';
 import clientPromise from '@/lib/mongodb';
-
+import Customer from '@/models/CustomerModel';
 export async function GET(request, { params }) {
     const { id } = params;
-
+    console.log("id", id);
     try {
-        const client = await clientPromise;
-        const db = client.db('yazlab1-3');
-
         // `_id`'yi string'den ObjectId'ye çeviriyoruz
-        const customer = await db.collection('customers').findOne({ _id: new ObjectId(id) });
-
+        const customer = await Customer.findById(id);
         if (!customer) {
             return new Response(JSON.stringify({ error: 'Customer not found' }), { status: 404 });
         }
