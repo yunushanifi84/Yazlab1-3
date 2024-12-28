@@ -115,7 +115,7 @@ const Order = () => {
 
         fetchLogs();
 
-        const interval = setInterval(fetchLogs, 100); // Logları her saniye yenile
+        const interval = setInterval(fetchLogs, 1000); // Logları her saniye yenile
         return () => clearInterval(interval);
     }, []);
 

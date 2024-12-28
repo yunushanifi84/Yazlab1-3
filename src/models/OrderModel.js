@@ -25,22 +25,24 @@ orderSchema.methods.updateProductStocks = async function () {
         if (!product) {
             await SemaphoreLog.create({
                 orderId: this._id,
-                status: 'Error',
-                message: `Product with ID ${item.ProductID} not found`
+                status: 'Hata',
+                message: `ID'si ${item.ProductID} olan ürün bulunamadı`
             });
-            throw new Error(`Product with ID ${item.ProductID} not found`);
+            throw new Error(`ID'si ${item.ProductID} olan ürün bulunamadı`);
         }
 
         try {
             // Semafor alındı logu
             await SemaphoreLog.create({
                 orderId: this._id,
-                status: 'Semaphore acquired',
-                message: `Processing stock update for product ${item.ProductID}`
+                status: 'Semafor alındı',
+                message: `Ürün ${item.ProductID} için stok güncellemesi işleniyor`
             });
 
             // Delay ekle (örneğin, 2 saniye)
+            console.log('2 saniye gecikme');
             await delay(2000);
+            console.log('Gecikme bitti');
 
             // Stok güncellemesi
             await product.updateStock(item.Quantity);
@@ -48,27 +50,29 @@ orderSchema.methods.updateProductStocks = async function () {
             // Stok güncellendi logu
             await SemaphoreLog.create({
                 orderId: this._id,
-                status: 'Stock updated',
-                message: `Stock updated successfully. Remaining stock: ${product.stock}`
+                status: 'Stok güncellendi',
+                message: `Stok başarıyla güncellendi. Kalan stok: ${product.stock}`
             });
         } catch (error) {
             // Hata logu
             await SemaphoreLog.create({
                 orderId: this._id,
-                status: 'Error',
-                message: `Failed to update stock for product ${item.ProductID}: ${error.message}`
+                status: 'Hata',
+                message: `Ürün ${item.ProductID} için stok güncellenemedi: ${error.message}`
             });
+            await delay(2000);
             throw error;
+
         } finally {
             // Semafor serbest bırakıldı logu
             await SemaphoreLog.create({
                 orderId: this._id,
-                status: 'Semaphore released',
-                message: `Semaphore released for product ${item.ProductID}`
+                status: 'Semafor serbest bırakıldı',
+                message: `Ürün ${item.ProductID} için semafor serbest bırakıldı`
             });
 
             // Delay ekle (örneğin, 1 saniye)
-            await delay(2000);
+            await delay(1000);
         }
     }
 };
