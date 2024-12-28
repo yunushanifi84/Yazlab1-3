@@ -4,9 +4,10 @@ const logSchema = new mongoose.Schema({
     LogDate: { type: Date, default: Date.now },
     LogType: { type: String, enum: ['Error', 'Warning', 'Info'], required: true },
     CustomerID: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
+
     CustomerType: { type: String, enum: ['Premium', 'Standard'], required: true },
     OrderDetails: { type: String, required: true },
-    OrderTime: { type: Date, required: true},
+    OrderTime: { type: Date, required: true },
     LogDetails: { type: String, required: true }
 });
 

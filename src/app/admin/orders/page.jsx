@@ -74,18 +74,17 @@ const Order = () => {
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
-                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: 0 }
+                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: Number.MAX_SAFE_INTEGER, OrderLog: "Sipariş Tamamlandı" }
                                 : ordr
                         )
                     );
                 } catch (error) {
-                    console.error(`Error updating order ${currentOrder._id}:`, error);
 
                     // Hata durumunda sipariş "Sipariş İptal Edildi" olarak işaretlenir
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
-                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: 0 }
+                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: Number.MAX_SAFE_INTEGER, OrderLog: error.response.data.error }
                                 : ordr
                         )
                     );
@@ -123,9 +122,10 @@ const Order = () => {
                     <thead>
                         <tr className="bg-gray-200 dark:bg-gray-700">
                             <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş ID</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Tür</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Detaylar</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Tarih</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Durumu</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Logu</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Detayları</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Tarihi</th>
                             <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Öncelik Skoru</th>
                         </tr>
                     </thead>
@@ -150,9 +150,12 @@ const Order = () => {
                                 >
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order._id}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderStatus}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderLog}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.length} Ürün</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{new Date(order.OrderDate).toLocaleString()}</td>
-                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.priorityScore ? order.priorityScore.toFixed(0) : ""}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                        {order.OrderStatus !== "Sipariş Onaylandı" && order.OrderStatus !== "Sipariş İptal Edildi" && order.priorityScore !== undefined ? order.priorityScore.toFixed(0) : ""}
+                                    </td>
                                 </tr>
                             );
                         })}

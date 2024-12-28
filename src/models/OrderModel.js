@@ -11,7 +11,8 @@ const orderSchema = new mongoose.Schema({
     ],
     TotalPrice: { type: Number, required: true },
     OrderDate: { type: Date, default: Date.now },
-    OrderStatus: { type: String, enum: ['Bekliyor', 'Sipariş İşleniyor', 'Sipariş Onaylandı', 'Sipariş İptal Edildi'], default: 'Bekliyor' }
+    OrderStatus: { type: String, enum: ['Bekliyor', 'Sipariş İşleniyor', 'Sipariş Onaylandı', 'Sipariş İptal Edildi'], default: 'Bekliyor' },
+    OrderLog: { type: String, required: false }
 });
 
 orderSchema.methods.updateProductStocks = async function () {

@@ -1,6 +1,7 @@
 import db from '@/lib/mongodb';
 import Order from '@/models/OrderModel';
 import CustomerLog from '@/models/CustomerLogModel';
+import Product from '@/models/ProductModel';
 import { Types } from 'mongoose';
 
 export async function PUT(request,) {
@@ -22,6 +23,7 @@ export async function PUT(request,) {
         }
 
         order.OrderStatus = OrderStatus;
+        order.OrderLog = 'Sipariş tamamlandı';
         await order.save();
         console.log(order);
 
@@ -32,6 +34,7 @@ export async function PUT(request,) {
             .findById(new Types.ObjectId(orderId))
             .populate('CustomerID');
         order.OrderStatus = "Sipariş İptal Edildi";
+        order.OrderLog = error.message;
         await order.save();
         return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
