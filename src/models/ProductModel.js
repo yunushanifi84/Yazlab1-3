@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
 
 productSchema.methods.updateStock = async function (quantity) {
     if (this.stock < quantity) {
-        throw new Error('Insufficient stock');
+        throw new Error('Stok Yetersiz!');
     }
     this.stock -= quantity;
     await this.save();
