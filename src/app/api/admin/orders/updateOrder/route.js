@@ -8,7 +8,6 @@ export async function PUT(request,) {
     const { orderId, OrderStatus } = await request.json();
 
     try {
-        console.log(orderId, OrderStatus);
 
         const order = await Order
             .findById(new Types.ObjectId(orderId))

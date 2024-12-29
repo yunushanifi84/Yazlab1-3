@@ -7,7 +7,6 @@ export async function GET(req) {
 
         // Tüm logları orderId ile birlikte getir
         const logs = await SemaphoreLog.find().populate('orderId');
-        console.log('logs', logs);
         // Başarılı durumda logları döndür
         return new Response(JSON.stringify(logs), { status: 200 });
     } catch (error) {

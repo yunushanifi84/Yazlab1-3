@@ -3,7 +3,6 @@ import clientPromise from '@/lib/mongodb';
 import Customer from '@/models/CustomerModel';
 export async function GET(request, { params }) {
     const id =(await params).id;
-    console.log("id", id);
     try {
         // `_id`'yi string'den ObjectId'ye çeviriyoruz
         const customer = await Customer.findById(id);

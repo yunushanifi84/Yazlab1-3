@@ -1,6 +1,6 @@
 import db from '@/lib/mongodb';
 import Customer from '@/models/CustomerModel';
-import { generateToken } from '@/lib/jwt';
+import { generateToken } from '@/middlewares/auth';
 
 export async function POST(request) {
     try {

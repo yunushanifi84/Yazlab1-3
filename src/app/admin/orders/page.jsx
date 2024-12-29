@@ -57,7 +57,6 @@ const Order = () => {
                 const latestOrders = [...orders];
                 const currentOrder = latestOrders[i];
 
-                console.log("currentOrder", currentOrder);
 
                 // Eğer sipariş zaten "Sipariş Onaylandı" veya "Sipariş İptal Edildi" ise atla
                 if (currentOrder.OrderStatus === "Sipariş Onaylandı" || currentOrder.OrderStatus === "Sipariş İptal Edildi") {
@@ -106,7 +105,6 @@ const Order = () => {
         const fetchLogs = async () => {
             try {
                 const response = await axios.get('/api/admin/logs/semaphoreLogs');
-                console.log("response", response.data);
                 setLogs(response.data);
             } catch (error) {
                 console.error('Error fetching logs:', error);

@@ -68,7 +68,6 @@ export default function CartPage() {
             return;
         }
         axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
-            console.log("customer ", response.data);
             setCustomer(response.data);
         });
 
@@ -86,7 +85,6 @@ export default function CartPage() {
         }
 
         const localCart = loadCart();
-        console.log("customer " + customer.Budget);
         if (customer.Budget - calculateTotalPrice() < 0) {
             toast.update(toastId, { type: 'error', render: 'Bakiyeniz yetersiz.', autoClose: 1000, isLoading: false });
             return;

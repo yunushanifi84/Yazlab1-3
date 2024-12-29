@@ -46,7 +46,6 @@ const Navbar = () => {
                 return;
             }
             axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
-                console.log("customer ", response.data);
                 setCustomer(response.data);
             });
         
