@@ -5,16 +5,21 @@ const productSchema = new mongoose.Schema({
     description: { type: String, required: true },
     stock: { type: Number, required: true },
     price: { type: Number, required: true },
-    imageStream: { type: Buffer, required: false } // Add this line for image bytestream
-
+    imageStream: { type: Buffer, required: false }
 });
 
+
+// Örnek bir kilitli işlem
 productSchema.methods.updateStock = async function (quantity) {
-    if (this.stock < quantity) {
-        throw new Error('Insufficient stock');
+
+    try {
+        if (this.stock < quantity) {
+            throw new Error('Stok Yetersiz!');
+        }
+        this.stock -= quantity;
+        await this.save();
+    } finally {
     }
-    this.stock -= quantity;
-    await this.save();
 };
 
 const Product = mongoose.models.Product || mongoose.model('Product', productSchema, 'products');

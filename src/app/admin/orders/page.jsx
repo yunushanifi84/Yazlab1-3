@@ -6,6 +6,7 @@ import { set } from "mongoose";
 const Order = () => {
     const [orders, setOrders] = useState([]);
     const [checkNewOrder, setCheckNewOrder] = useState(true);
+    const [logs, setLogs] = useState([]);
     useEffect(() => {
 
         const fetchOrders = async () => {
@@ -64,7 +65,6 @@ const Order = () => {
                 }
 
                 // 5 saniye bekle
-                await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 try {
                     // Sipariş durumunu "Sipariş Onaylandı" olarak güncelle
@@ -74,18 +74,17 @@ const Order = () => {
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
-                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: 0 }
+                                ? { ...ordr, OrderStatus: "Sipariş Onaylandı", priorityScore: Number.MAX_SAFE_INTEGER, OrderLog: "Sipariş Tamamlandı" }
                                 : ordr
                         )
                     );
                 } catch (error) {
-                    console.error(`Error updating order ${currentOrder._id}:`, error);
 
                     // Hata durumunda sipariş "Sipariş İptal Edildi" olarak işaretlenir
                     setOrders((prevOrders) =>
                         prevOrders.map((ordr) =>
                             ordr._id === currentOrder._id && ordr.OrderStatus === "Sipariş İşleniyor"
-                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: 0 }
+                                ? { ...ordr, OrderStatus: "Sipariş İptal Edildi", priorityScore: Number.MAX_SAFE_INTEGER, OrderLog: error.response.data.error }
                                 : ordr
                         )
                     );
@@ -102,6 +101,23 @@ const Order = () => {
         await checkNewOrders();
     };
 
+    useEffect(() => {
+
+        const fetchLogs = async () => {
+            try {
+                const response = await axios.get('/api/admin/logs/semaphoreLogs');
+                console.log("response", response.data);
+                setLogs(response.data);
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+            }
+        };
+
+        fetchLogs();
+
+        const interval = setInterval(fetchLogs, 1000); // Logları her saniye yenile
+        return () => clearInterval(interval);
+    }, []);
 
 
     return (
@@ -123,10 +139,13 @@ const Order = () => {
                     <thead>
                         <tr className="bg-gray-200 dark:bg-gray-700">
                             <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş ID</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Tür</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Detaylar</th>
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Tarih</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Durumu</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Logu</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Detayları</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Tarihi</th>
                             <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Öncelik Skoru</th>
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Semaphore Logları</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -150,9 +169,20 @@ const Order = () => {
                                 >
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order._id}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderStatus}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderLog}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.length} Ürün</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{new Date(order.OrderDate).toLocaleString()}</td>
-                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.priorityScore ? order.priorityScore.toFixed(0) : ""}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                        {order.OrderStatus !== "Sipariş Onaylandı" && order.OrderStatus !== "Sipariş İptal Edildi" && order.priorityScore !== undefined ? order.priorityScore.toFixed(0) : ""}
+                                    </td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                        {logs.length > 0 && logs
+                                            .filter((log) => log.orderId._id === order._id)
+                                            .map((log, index) => (
+                                                <div key={index}>{`${log.status}: ${log.message}`}</div>
+                                            ))}
+                                    </td>
+
                                 </tr>
                             );
                         })}
