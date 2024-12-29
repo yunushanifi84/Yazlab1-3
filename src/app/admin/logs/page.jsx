@@ -106,7 +106,7 @@ const Logs = () => {
                             <tr className="bg-gray-200 dark:bg-gray-700">
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">ID</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Tür</th>
-                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Müşteri Id'si</th>
+                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Müşteri Id&apos;si</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Müşteri Tipi</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Detayları</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Tarihi</th>
