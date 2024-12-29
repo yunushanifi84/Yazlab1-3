@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "@/middlewares/apiClient";
 
 const Logs = () => {
     const [logs, setLogs] = useState([]);
@@ -8,7 +8,7 @@ const Logs = () => {
 
     const fetchLogs = async () => {
         try {
-            const response = await axios.post("/api/admin/logs",{logType:logType});
+            const response = await apiClient.post("/api/admin/logs",{logType:logType});
             setLogs(response.data);
         } catch (error) {
             console.error("Error fetching customers:", error);

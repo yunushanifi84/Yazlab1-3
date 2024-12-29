@@ -4,7 +4,7 @@ import './page.css';
 import minusIcon from '@/images/Icons/minus.png';
 import plusIcon from '@/images/Icons/plus.png';
 import Image from 'next/image';
-import axios from 'axios';
+import apiClient from '@/middlewares/apiClient';
 import bufferToBase64 from '@/utils/imageConverter';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -45,7 +45,7 @@ export default function CartPage() {
         const localCart = loadCart();
         if (localCart.length !== 0) {
             const products = async () => {
-                const response = await axios.post('/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
+                const response = await apiClient.post('/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
                 return response.data;
             }
 
@@ -67,7 +67,7 @@ export default function CartPage() {
         if (localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined") {
             return;
         }
-        axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
+        apiClient.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
             setCustomer(response.data);
         });
 
@@ -91,7 +91,7 @@ export default function CartPage() {
         }
 
 
-        await axios.post('/api/orders',
+        await apiClient.post('/api/orders',
             {
                 CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: calculateTotalPrice(), CustomerType: localStorage.getItem('CustomerType')
             }

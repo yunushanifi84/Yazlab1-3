@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { set } from "mongoose";
-
+import apiClient from "@/middlewares/apiClient";
 const Order = () => {
     const [orders, setOrders] = useState([]);
     const [checkNewOrder, setCheckNewOrder] = useState(true);
@@ -11,7 +9,7 @@ const Order = () => {
 
         const fetchOrders = async () => {
             try {
-                const response = await axios.get("/api/admin/orders");
+                const response = await apiClient.get("/api/admin/orders");
                 setOrders(response.data);
 
             } catch (error) {
@@ -67,7 +65,7 @@ const Order = () => {
 
                 try {
                     // Sipariş durumunu "Sipariş Onaylandı" olarak güncelle
-                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: currentOrder._id, OrderStatus: "Sipariş Onaylandı" });
+                    await apiClient.put(`/api/admin/orders/updateOrder`, { orderId: currentOrder._id, OrderStatus: "Sipariş Onaylandı" });
 
                     // State güncellemesi
                     setOrders((prevOrders) =>
@@ -104,7 +102,7 @@ const Order = () => {
 
         const fetchLogs = async () => {
             try {
-                const response = await axios.get('/api/admin/logs/semaphoreLogs');
+                const response = await apiClient.get('/api/admin/logs/semaphoreLogs');
                 setLogs(response.data);
             } catch (error) {
                 console.error('Error fetching logs:', error);

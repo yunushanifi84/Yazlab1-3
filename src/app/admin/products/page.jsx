@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import ProductModal from "./ProductModal";
+import apiClient from "@/middlewares/apiClient";
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -18,7 +18,7 @@ const Products = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get("/api/products");
+                const response = await apiClient.get("/api/products");
                 setProducts(response.data);
             } catch (error) {
                 console.error("Ürünleri çekerken hata oluştu:", error);
@@ -50,7 +50,7 @@ const Products = () => {
         }
 
         try {
-            const response = await axios.post("/api/admin/products", formData, {
+            const response = await apiClient.post("/api/admin/products", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

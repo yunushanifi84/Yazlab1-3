@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import "./page.module.css";
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-
+import axios from 'axios';
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
