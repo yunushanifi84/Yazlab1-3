@@ -8,10 +8,11 @@ const Navbar = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [customer, setCustomer] = useState({});
-
+    const [customerId, setCustomerId] = useState(null);
     useEffect(() => {
         const token = localStorage.getItem("token");
         const email = localStorage.getItem("email");
+        setCustomerId(localStorage.getItem('CustomerID'));
         if (token && email) {
             setIsAuthenticated(true);
 
@@ -26,8 +27,7 @@ const Navbar = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("email");
+        localStorage.clear();
         setIsAuthenticated(false);
         setIsAdmin(false);
         location.href = "/";
@@ -40,12 +40,16 @@ const Navbar = () => {
         }
     };
     useEffect(() => {
-        if (localStorage.getItem('CustomerID') !== null) {
+           
+            if (localStorage.getItem('CustomerID') === null) {
+            
+                return;
+            }
             axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
                 console.log("customer ", response.data);
                 setCustomer(response.data);
             });
-        }
+        
     }, []);
 
     return (
@@ -137,12 +141,12 @@ const Navbar = () => {
                                     >
                                         Sepete Git
                                     </Link>
-                                    <div className="text-white flex flex-row items-start space-x-4">
+                                    {customerId && <div className="text-white flex flex-row items-start space-x-4">
                                         <span>Kullanıcı Adı: {customer.CustomerName}</span>
                                         <span>Bütçe: {customer.Budget}</span>
                                         <span>Toplam Harcama: {customer.TotalSpent}</span>
                                         <span>Müşteri Tipi: {customer.CustomerType}</span>
-                                    </div>
+                                    </div>}
                                 </div>
                             )}
                         </div>
