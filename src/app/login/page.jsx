@@ -19,8 +19,13 @@ function LoginPage() {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('email', email);
-                localStorage.setItem('CustomerID', response.data.CustomerID);
-                localStorage.setItem('CustomerType', response.data.CustomerType);
+                if (email === process.env.ADMIN_EMAIL) {
+
+                } else {
+                    localStorage.setItem('CustomerID', response.data.CustomerID);
+                    localStorage.setItem('CustomerType', response.data.CustomerType);
+                }
+
             }
             toast.update(toastId, { render: 'Giriş başarılı!', type: "success", autoClose: 2000, isLoading: false });
             setTimeout(() => {

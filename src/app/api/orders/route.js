@@ -42,9 +42,9 @@ export async function POST(request) {
             LogType: 'Info',
             CustomerID: new Types.ObjectId(CustomerID),
             CustomerType: CustomerType,
-            OrderDetails: `${Products.length} products ordered with total price ${TotalPrice}`,
+            OrderDetails: ` Toplam fiyatı ${TotalPrice} olan ${Products.reduce((acc, product) => acc + product.Quantity, 0)} ürün siparişi oluşturuldu`,
             OrderTime: order.OrderDate,
-            LogDetails: 'Order created'
+            LogDetails: 'Sipraiş oluşturuldu'
         });
         await customerLog.save();
         return new Response(JSON.stringify({ success: 'Order created' }), { status: 200 });
