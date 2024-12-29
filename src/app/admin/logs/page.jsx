@@ -6,7 +6,7 @@ const Logs = () => {
     const [logs, setLogs] = useState([]);
     const [logType, setLogType] = useState("admin");
 
-    const fetchCustomers = async () => {
+    const fetchLogs = async () => {
         try {
             const response = await axios.post("/api/admin/logs",{logType:logType});
             setLogs(response.data);
@@ -19,8 +19,16 @@ const Logs = () => {
     useEffect(() => {
 
 
-        fetchCustomers();
+        fetchLogs();
     }, [logType]);
+
+    useEffect(() => {
+            const interval = setInterval(() => {
+                fetchLogs();
+    
+            }, 1000);
+            return () => clearInterval(interval); // Bellek sızıntısını önlemek için interval temizleme
+        }, [logs]);
 
 
     
