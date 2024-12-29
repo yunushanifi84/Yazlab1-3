@@ -6,7 +6,6 @@ export function middleware(req) {
 
 
     if (checkToken(req)) {
-        console.log("doğulama isteği");
 
         return NextResponse.next();
 
