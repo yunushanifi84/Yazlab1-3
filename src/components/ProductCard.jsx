@@ -15,6 +15,7 @@ export default function ProductCard({ products }) {
             cart.push({ ProductID: product._id, Quantity: 1 });
             localStorage.setItem('cart', JSON.stringify(cart));
         }
+        window.location.href = '/cart';
 
 
     }
