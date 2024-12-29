@@ -6,11 +6,12 @@ import plusIcon from '@/images/Icons/plus.png';
 import Image from 'next/image';
 import axios from 'axios';
 import bufferToBase64 from '@/utils/imageConverter';
-import { ToastContainer , toast} from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
     const [storedCart, setStoredCart] = useState([]);
+    const [customer, setCustomer] = useState({});
     const loadCart = () => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -34,6 +35,9 @@ export default function CartPage() {
         );
         setStoredCart(updatedCart);
         updateLocalStorage(updatedCart);
+    };
+    const calculateTotalPrice = () => {
+        return cart.reduce((acc, item) => acc + item.price * item.Quantity, 0);
     };
 
     useEffect(() => {
@@ -59,10 +63,18 @@ export default function CartPage() {
 
     }, [storedCart]);
 
-    const handleClickPurchase = (e) => {
+    useEffect(() => {
+        axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
+            console.log("customer ", response.data);
+            setCustomer(response.data);
+        });
+
+    }, []);
+
+    const handleClickPurchase = async (e) => {
         e.preventDefault();
         const toastId = toast.loading('Ödeme işlemi gerçekleştiriliyor...', { autoClose: false });
-        if(localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined"){
+        if (localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined") {
             toast.update(toastId, { type: 'info', render: 'Lütfen önce giriş yapınız.', autoClose: 500, isLoading: false });
             setTimeout(() => {
                 window.location.href = '/login';
@@ -71,19 +83,26 @@ export default function CartPage() {
         }
 
         const localCart = loadCart();
-        const response = axios.post('/api/orders',
+        console.log("customer " + customer.Budget);
+        if (customer.Budget - calculateTotalPrice() < 0) {
+            toast.update(toastId, { type: 'error', render: 'Bakiyeniz yetersiz.', autoClose: 1000, isLoading: false });
+            return;
+        }
+
+
+        await axios.post('/api/orders',
             {
-                CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: 0, CustomerType: localStorage.getItem('CustomerType')
+                CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: calculateTotalPrice(), CustomerType: localStorage.getItem('CustomerType')
             }
         ).then((response) => {
             if (response.status === 200) {
-                toast.update(toastId, { type: 'success', render: 'Ödeme işlemi başarılı.', autoClose: 1000 , isLoading: false});
+                toast.update(toastId, { type: 'success', render: 'Ödeme işlemi başarılı.', autoClose: 1000, isLoading: false });
                 setTimeout(() => {
                     window.location.href = '/';
                 }, 1000);
             }
         }).catch((error) => {
-            toast.update(toastId, { type: 'error', render: 'Ödeme işlemi sırasında bir hata oluştu.', autoClose: 1000 , isLoading: false});
+            toast.update(toastId, { type: 'error', render: 'Ödeme işlemi sırasında bir hata oluştu.', autoClose: 1000, isLoading: false });
         });
 
 
