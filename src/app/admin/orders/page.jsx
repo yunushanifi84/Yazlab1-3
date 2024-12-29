@@ -1,6 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import apiClient from "@/middlewares/apiClient";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false })
+
+
 const Order = () => {
     const [orders, setOrders] = useState([]);
     const [checkNewOrder, setCheckNewOrder] = useState(true);
@@ -19,6 +24,28 @@ const Order = () => {
         fetchOrders();
 
     }, [checkNewOrder]);
+
+    const CartLottie = () => {
+        const defaultOptions = {
+            loop: true,
+            autoplay: true,
+            animationData: require('@/lotties/cart-animation.json'),
+            rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice"
+            }
+            
+        };
+
+        return (
+            <div>
+                <Lottie
+                    options={defaultOptions}
+                    height={100}
+                    width={100}
+                />
+            </div>
+        )
+    }
 
 
     useEffect(() => {
@@ -165,7 +192,13 @@ const Order = () => {
                                 >
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order._id}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderStatus}</td>
-                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderLog}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                        {!order.OrderLog && logs.some((log) => log.orderId._id === order._id) ? (
+                                            CartLottie()
+                                        ) : (
+                                            order.OrderLog
+                                        )}
+                                    </td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.length} Ürün</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{new Date(order.OrderDate).toLocaleString()}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
