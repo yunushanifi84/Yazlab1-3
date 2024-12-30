@@ -199,7 +199,7 @@ const Order = () => {
                                             order.OrderLog
                                         )}
                                     </td>
-                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.length} Ürün</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.map(item => `(${item.ProductID} x ${item.Quantity})`).join(', ')}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{new Date(order.OrderDate).toLocaleString()}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
                                         {order.OrderStatus !== "Sipariş Onaylandı" && order.OrderStatus !== "Sipariş İptal Edildi" && order.priorityScore !== undefined ? order.priorityScore.toFixed(0) : ""}
