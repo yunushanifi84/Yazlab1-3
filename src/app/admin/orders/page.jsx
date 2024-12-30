@@ -33,7 +33,7 @@ const Order = () => {
             rendererSettings: {
                 preserveAspectRatio: "xMidYMid slice"
             }
-            
+
         };
 
         return (

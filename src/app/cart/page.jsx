@@ -80,6 +80,7 @@ export default function CartPage() {
             toast.update(toastId, { type: 'info', render: 'Lütfen önce giriş yapınız.', autoClose: 500, isLoading: false });
             setTimeout(() => {
                 window.location.href = '/login';
+                localStorage.removeItem('cart');
             }, 1500);
             return;
         }
