@@ -8,19 +8,24 @@ export default function page() {
     const [orders, setOrders] = useState([]);
 
     useEffect(() => {
-        apiClient.get("/api/admin/orders").then((response) => {
+        const interval = setInterval(() => {
+            apiClient.get("/api/admin/orders").then((response) => {
 
-            const filteredOrders = response.data.filter(order => order.CustomerID._id === localStorage.getItem("CustomerID"));
-            setOrders(filteredOrders);
-            console.log("response", filteredOrders);
+                const filteredOrders = response.data.filter(order => order.CustomerID._id === localStorage.getItem("CustomerID"));
+                setOrders(filteredOrders);
+                console.log("response", filteredOrders);
 
 
 
-        });
+            });
+        }, 2500);
+        return () => clearInterval(interval); // Bellek sızıntısını önlemek için interval temizleme
+
     }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
+
             const now = new Date();
             setOrders(prevOrders => prevOrders.map((order) => {
                 if (order.OrderStatus === "Sipariş Onaylandı" || order.OrderStatus === "Sipariş İptal Edildi") return order;
@@ -31,7 +36,7 @@ export default function page() {
                 return { ...order, priorityScore };
             }))
 
-        }, 1000);
+        }, 100);
 
 
         return () => clearInterval(interval); // Bellek sızıntısını önlemek için interval temizleme

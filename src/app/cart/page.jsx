@@ -79,8 +79,9 @@ export default function CartPage() {
         if (localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined") {
             toast.update(toastId, { type: 'info', render: 'Lütfen önce giriş yapınız.', autoClose: 500, isLoading: false });
             setTimeout(() => {
+
                 window.location.href = '/login';
-                localStorage.removeItem('cart');
+
             }, 1500);
             return;
         }
@@ -100,6 +101,7 @@ export default function CartPage() {
             if (response.status === 200) {
                 toast.update(toastId, { type: 'success', render: 'Ödeme işlemi başarılı.', autoClose: 1000, isLoading: false });
                 setTimeout(() => {
+                    localStorage.removeItem('cart');
                     window.location.href = '/';
                 }, 1000);
             }
