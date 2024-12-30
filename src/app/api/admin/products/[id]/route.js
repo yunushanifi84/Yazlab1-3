@@ -4,7 +4,6 @@ import Product from '@/models/ProductModel';
 //ürünü silme
 export async function DELETE(request, { params }) {
     const { id } =await params;
-    console.log(id);
     try {
         // Verilen ID ile ürün silme
         const product = await Product.findByIdAndDelete(id);
@@ -23,7 +22,6 @@ export async function DELETE(request, { params }) {
 export async function PUT(request, { params }) {
     const { id } =await params;
     const { stock } = await request.json();
-    console.log(id, stock);
     try {
         // Verilen ID ile ürün güncelleme
         const product = await Product.findByIdAndUpdate(id, { stock }, { new: true });

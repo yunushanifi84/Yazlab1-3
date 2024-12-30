@@ -40,9 +40,7 @@ orderSchema.methods.updateProductStocks = async function () {
             });
 
             // Delay ekle (örneğin, 2 saniye)
-            console.log('2 saniye gecikme');
             await delay(2000);
-            console.log('Gecikme bitti');
 
             // Stok güncellemesi
             await product.updateStock(item.Quantity);

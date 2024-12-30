@@ -2,8 +2,7 @@ import { ObjectId } from 'mongodb';
 import clientPromise from '@/lib/mongodb';
 import Customer from '@/models/CustomerModel';
 export async function GET(request, { params }) {
-    const { id } = params;
-    console.log("id", id);
+    const id =(await params).id;
     try {
         // `_id`'yi string'den ObjectId'ye çeviriyoruz
         const customer = await Customer.findById(id);
@@ -19,7 +18,7 @@ export async function GET(request, { params }) {
 }
 
 export async function PUT(request, { params }) {
-    const { id } = params;
+    const id = (await params).id;
 
     try {
         const client = await clientPromise;
@@ -44,7 +43,7 @@ export async function PUT(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-    const { id } = params;
+    const id = (await params).id;
 
     try {
         const client = await clientPromise;

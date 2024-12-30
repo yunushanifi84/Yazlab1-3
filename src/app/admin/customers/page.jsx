@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "@/middlewares/apiClient";
 
 const CustomersTable = () => {
     const [customers, setCustomers] = useState([]);
@@ -16,7 +16,7 @@ const CustomersTable = () => {
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const response = await axios.get("/api/admin/customers");
+                const response = await apiClient.get("/api/admin/customers");
                 setCustomers(response.data);
             } catch (error) {
                 console.error("Error fetching customers:", error);
@@ -34,7 +34,7 @@ const CustomersTable = () => {
     const handleAddCustomer = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("/api/admin/customers", newCustomer);
+            const response = await apiClient.post("/api/admin/customers", newCustomer);
             setCustomers([...customers, response.data]);
             setIsModalOpen(false);
             setNewCustomer({ name: "", email: "", phone: "" });

@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "@/middlewares/apiClient";
 
 const Logs = () => {
     const [logs, setLogs] = useState([]);
     const [logType, setLogType] = useState("admin");
 
-    const fetchCustomers = async () => {
+    const fetchLogs = async () => {
         try {
-            const response = await axios.post("/api/admin/logs",{logType:logType});
+            const response = await apiClient.post("/api/admin/logs",{logType:logType});
             setLogs(response.data);
         } catch (error) {
             console.error("Error fetching customers:", error);
@@ -19,8 +19,16 @@ const Logs = () => {
     useEffect(() => {
 
 
-        fetchCustomers();
+        fetchLogs();
     }, [logType]);
+
+    useEffect(() => {
+            const interval = setInterval(() => {
+                fetchLogs();
+    
+            }, 1000);
+            return () => clearInterval(interval); // Bellek sızıntısını önlemek için interval temizleme
+        }, [logs]);
 
 
     
@@ -98,7 +106,7 @@ const Logs = () => {
                             <tr className="bg-gray-200 dark:bg-gray-700">
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">ID</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Tür</th>
-                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Müşteri Id'si</th>
+                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Müşteri Id&apos;si</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Müşteri Tipi</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Detayları</th>
                                 <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-bold">Sipariş Tarihi</th>

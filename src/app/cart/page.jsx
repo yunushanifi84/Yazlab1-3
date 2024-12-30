@@ -4,7 +4,7 @@ import './page.css';
 import minusIcon from '@/images/Icons/minus.png';
 import plusIcon from '@/images/Icons/plus.png';
 import Image from 'next/image';
-import axios from 'axios';
+import apiClient from '@/middlewares/apiClient';
 import bufferToBase64 from '@/utils/imageConverter';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -45,7 +45,7 @@ export default function CartPage() {
         const localCart = loadCart();
         if (localCart.length !== 0) {
             const products = async () => {
-                const response = await axios.post('/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
+                const response = await apiClient.post('/api/products/getProductsByList', { ids: localCart.map((item) => item.ProductID) });
                 return response.data;
             }
 
@@ -64,8 +64,10 @@ export default function CartPage() {
     }, [storedCart]);
 
     useEffect(() => {
-        axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
-            console.log("customer ", response.data);
+        if (localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined") {
+            return;
+        }
+        apiClient.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
             setCustomer(response.data);
         });
 
@@ -77,20 +79,21 @@ export default function CartPage() {
         if (localStorage.getItem('CustomerID') === null || localStorage.getItem('CustomerID') === "undefined") {
             toast.update(toastId, { type: 'info', render: 'Lütfen önce giriş yapınız.', autoClose: 500, isLoading: false });
             setTimeout(() => {
+
                 window.location.href = '/login';
+
             }, 1500);
             return;
         }
 
         const localCart = loadCart();
-        console.log("customer " + customer.Budget);
         if (customer.Budget - calculateTotalPrice() < 0) {
             toast.update(toastId, { type: 'error', render: 'Bakiyeniz yetersiz.', autoClose: 1000, isLoading: false });
             return;
         }
 
 
-        await axios.post('/api/orders',
+        await apiClient.post('/api/orders',
             {
                 CustomerID: localStorage.getItem('CustomerID'), Products: localCart, TotalPrice: calculateTotalPrice(), CustomerType: localStorage.getItem('CustomerType')
             }
@@ -98,6 +101,7 @@ export default function CartPage() {
             if (response.status === 200) {
                 toast.update(toastId, { type: 'success', render: 'Ödeme işlemi başarılı.', autoClose: 1000, isLoading: false });
                 setTimeout(() => {
+                    localStorage.removeItem('cart');
                     window.location.href = '/';
                 }, 1000);
             }

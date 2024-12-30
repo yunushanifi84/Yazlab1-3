@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import apiClient from "@/middlewares/apiClient";
 
 const ProductModal = ({ product, onClose, onUpdate, onDelete }) => {
     const [updatedStock, setUpdatedStock] = useState(product.stock);
 
     const handleUpdateStock = async () => {
         try {
-            await axios.put(`/api/admin/products/${product._id}`, {
+            await apiClient.put(`/api/admin/products/${product._id}`, {
                 stock: updatedStock,
             });
             onUpdate(product._id, updatedStock);
@@ -18,7 +18,7 @@ const ProductModal = ({ product, onClose, onUpdate, onDelete }) => {
 
     const handleDeleteProduct = async () => {
         try {
-            await axios.delete(`/api/admin/products/${product._id}`);
+            await apiClient.delete(`/api/admin/products/${product._id}`);
             onDelete(product._id);
             onClose();
         } catch (error) {

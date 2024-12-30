@@ -1,7 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { set } from "mongoose";
+import apiClient from "@/middlewares/apiClient";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false })
+
 
 const Order = () => {
     const [orders, setOrders] = useState([]);
@@ -11,7 +14,7 @@ const Order = () => {
 
         const fetchOrders = async () => {
             try {
-                const response = await axios.get("/api/admin/orders");
+                const response = await apiClient.get("/api/admin/orders");
                 setOrders(response.data);
 
             } catch (error) {
@@ -21,6 +24,28 @@ const Order = () => {
         fetchOrders();
 
     }, [checkNewOrder]);
+
+    const CartLottie = () => {
+        const defaultOptions = {
+            loop: true,
+            autoplay: true,
+            animationData: require('@/lotties/cart-animation.json'),
+            rendererSettings: {
+                preserveAspectRatio: "xMidYMid slice"
+            }
+
+        };
+
+        return (
+            <div>
+                <Lottie
+                    options={defaultOptions}
+                    height={100}
+                    width={100}
+                />
+            </div>
+        )
+    }
 
 
     useEffect(() => {
@@ -57,7 +82,6 @@ const Order = () => {
                 const latestOrders = [...orders];
                 const currentOrder = latestOrders[i];
 
-                console.log("currentOrder", currentOrder);
 
                 // Eğer sipariş zaten "Sipariş Onaylandı" veya "Sipariş İptal Edildi" ise atla
                 if (currentOrder.OrderStatus === "Sipariş Onaylandı" || currentOrder.OrderStatus === "Sipariş İptal Edildi") {
@@ -68,7 +92,7 @@ const Order = () => {
 
                 try {
                     // Sipariş durumunu "Sipariş Onaylandı" olarak güncelle
-                    await axios.put(`/api/admin/orders/updateOrder`, { orderId: currentOrder._id, OrderStatus: "Sipariş Onaylandı" });
+                    await apiClient.put(`/api/admin/orders/updateOrder`, { orderId: currentOrder._id, OrderStatus: "Sipariş Onaylandı" });
 
                     // State güncellemesi
                     setOrders((prevOrders) =>
@@ -105,8 +129,7 @@ const Order = () => {
 
         const fetchLogs = async () => {
             try {
-                const response = await axios.get('/api/admin/logs/semaphoreLogs');
-                console.log("response", response.data);
+                const response = await apiClient.get('/api/admin/logs/semaphoreLogs');
                 setLogs(response.data);
             } catch (error) {
                 console.error('Error fetching logs:', error);
@@ -169,7 +192,13 @@ const Order = () => {
                                 >
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order._id}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderStatus}</td>
-                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.OrderLog}</td>
+                                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                        {!order.OrderLog && logs.some((log) => log.orderId._id === order._id) ? (
+                                            CartLottie()
+                                        ) : (
+                                            order.OrderLog
+                                        )}
+                                    </td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{order.Products.length} Ürün</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{new Date(order.OrderDate).toLocaleString()}</td>
                                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">

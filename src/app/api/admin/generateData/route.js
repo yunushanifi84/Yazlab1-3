@@ -27,7 +27,6 @@ export async function GET(req) {
 
         try {
             await Customer.insertMany(customers);
-            console.log('Customers initialized');
         } catch (err) {
             console.error(err.message);
         }
