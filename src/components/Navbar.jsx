@@ -40,15 +40,15 @@ const Navbar = () => {
         }
     };
     useEffect(() => {
-           
-            if (localStorage.getItem('CustomerID') === null) {
-            
-                return;
-            }
-            axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
-                setCustomer(response.data);
-            });
-        
+
+        if (localStorage.getItem('CustomerID') === null) {
+
+            return;
+        }
+        axios.get(`/api/customers/${localStorage.getItem('CustomerID')}`).then((response) => {
+            setCustomer(response.data);
+        });
+
     }, []);
 
     return (
@@ -140,11 +140,18 @@ const Navbar = () => {
                                     >
                                         Sepete Git
                                     </Link>
+                                    <Link
+                                        href="/orders"
+                                        className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition duration-200"
+                                    >
+                                        Siparişlerim
+                                    </Link>
                                     {customerId && <div className="text-white flex flex-row items-start space-x-4">
                                         <span>Kullanıcı Adı: {customer.CustomerName}</span>
                                         <span>Bütçe: {customer.Budget}</span>
                                         <span>Toplam Harcama: {customer.TotalSpent}</span>
                                         <span>Müşteri Tipi: {customer.CustomerType}</span>
+
                                     </div>}
                                 </div>
                             )}
