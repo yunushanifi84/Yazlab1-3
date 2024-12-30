@@ -51,6 +51,7 @@ orderSchema.methods.updateProductStocks = async function () {
                 status: 'Stok güncellendi',
                 message: `Stok başarıyla güncellendi. Kalan stok: ${product.stock}`
             });
+            await delay(2000);
         } catch (error) {
             // Hata logu
             await SemaphoreLog.create({
