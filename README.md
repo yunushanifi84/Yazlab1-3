@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Yazlab1-3 E-Ticaret Uygulaması
 
-## Getting Started
+Bu proje, Kocaeli Üniversitesi Yazılım Laboratuvarı I - 3. Proje kapsamında geliştirilmiş bir e-ticaret uygulamasıdır. Proje, Next.js kullanılarak geliştirilmiş ve MongoDB veritabanı ile entegre edilmiştir.
 
-First, run the development server:
+## Proje Özellikleri
 
+- Ürün listeleme ve detay görüntüleme
+- Kullanıcı kaydı ve girişi
+- Sepet yönetimi
+- Sipariş oluşturma ve takip etme
+- Admin paneli ile ürün ve sipariş yönetimi
+- Semafor mekanizması ile eşzamanlı işlem yönetimi
+
+## Teknolojiler
+
+- **Frontend:** React, Next.js
+- **Backend:** Next.js API Routes
+- **Veritabanı:** MongoDB (Mongoose)
+- **Kimlik Doğrulama:** JWT (JSON Web Token)
+- **Stil:** Tailwind CSS, Bootstrap
+- **HTTP İstekleri:** Axios
+
+## Başlangıç
+
+Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
+
+1. Projeyi klonlayın:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repo-url>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Bağımlılıkları yükleyin:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. `.env.local` dosyası oluşturun ve MongoDB bağlantı URL'inizi ekleyin:
+```
+MongoDBUrl=your_mongodb_connection_string
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Geliştirme sunucusunu başlatın:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açarak uygulamayı görüntüleyebilirsiniz.
 
-To learn more about Next.js, take a look at the following resources:
+## Proje Yapısı
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/src/app`: Next.js sayfaları ve API rotaları
+- `/src/components`: Yeniden kullanılabilir React bileşenleri
+- `/src/models`: Mongoose veri modelleri
+- `/src/lib`: Yardımcı fonksiyonlar ve kütüphaneler
+- `/src/utils`: Yardımcı işlevler
+- `/src/middlewares`: Middleware fonksiyonları
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Semafor Mekanizması
 
-## Deploy on Vercel
+Bu projede, eşzamanlı stok güncellemelerini yönetmek için semafor mekanizması kullanılmıştır. Semafor işlemi şu adımları içerir:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. İşlem başlatılır ve semafor alınır
+2. Stok güncellemesi yapılır
+3. İşlem tamamlanır ve semafor serbest bırakılır
+4. Tüm işlemler loglama sistemi ile kayıt altına alınır
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Katkıda Bulunanlar
+
+- Yunus Hanifi Öztürk
+- Eyüp Ensar Kara
+
+## Lisans
+
+Bu proje açık kaynak olarak lisanslanmıştır.
